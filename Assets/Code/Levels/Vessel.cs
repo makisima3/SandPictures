@@ -9,6 +9,7 @@ namespace Code.Levels
     public class Vessel : MonoBehaviour, IInitialized<VesselInitData>
     {
         [SerializeField] private Transform spawnPoint;
+        [SerializeField] private Transform spawnPointView;
         [SerializeField] private Transform view;
         [SerializeField] private float spawnPointOffset = 2f;
         [SerializeField] private Transform grainsHolder;
@@ -26,16 +27,18 @@ namespace Code.Levels
             _worldFactory = initData.WorldFactory;
             
             view.localScale = new Vector3(initData.Size.x, initData.Size.y, 0.2f);
-            view.position = new Vector3(view.localScale.x / 2, view.localScale.y / 2, 0f);
+            view.position = new Vector3(view.localScale.x / 2 - 0.5f, view.localScale.y / 2 - 0.5f, 0f);
             
-            spawnPoint.position += Vector3.up * initData.Size.y + Vector3.up * spawnPointOffset;
+            spawnPointView.position += Vector3.up * initData.Size.y + Vector3.up * spawnPointOffset;
         }
 
         public void SpawnGrain(Cell cell,MaterialHolder.UniqueMaterial material)
         {
+            SoundManager.Instance.PlaySound();
+            
             var position = spawnPoint.position;
             position.x = GetWorldPosition(cell.Position).x;
-            spawnPoint.position = position;
+            spawnPointView.position = position;
             
             var grain = _worldFactory.Create<Grain, GrainInitData>(new GrainInitData()
             {

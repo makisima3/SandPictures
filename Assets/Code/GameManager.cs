@@ -22,15 +22,17 @@ namespace Code
         [SerializeField] private CameraController cameraController;
         [SerializeField] private ColorsSelector colorsSelector;
         [SerializeField] private Material grainBaseMaterial;
-        
+        [SerializeField] private LevelCompleteView levelCompleteView;
         private LevelStorageObject _levelStorageObject;
 
         private void Awake()
         {
+            levelCompleteView.Initialize(new LevelCompleteInitData(){});
+            
             _levelStorageObject =
                 PersistentStorage.PersistentStorage.Load<LevelStorageObject, LevelStorageObject.LevelData>(
                     new LevelStorageObject(new LevelStorageObject.LevelData() {Level = 0}));
-
+            
             if (_levelStorageObject.Data.Level >= levels.Count)
             {
                 _levelStorageObject.Data.Level = 0;
@@ -62,7 +64,8 @@ namespace Code
             {
                 WorldFactory = worldFactory,
                 BaseMaterial = grainBaseMaterial,
-                TargetImage = targetImage
+                TargetImage = targetImage,
+                LevelCompleteView = levelCompleteView
             });
             return spawnedLevel;
         }

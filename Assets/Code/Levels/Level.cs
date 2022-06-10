@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Code.InitDatas;
+using Code.UI;
 using Code.Utils;
 using Plugins.SimpleFactory;
 using UnityEngine;
@@ -25,6 +26,7 @@ namespace Code.Levels
         private bool _isEnded;
         private int x;
         private int y;
+        private LevelCompleteView _levelCompleteView;
         
         [field: SerializeField] public MaterialHolder MaterialHolder { get; private set; }
         public Vector2Int Size => new Vector2Int(_cells.GetLength(0), _cells.GetLength(1));
@@ -33,7 +35,8 @@ namespace Code.Levels
         {
             _cells = ImageConverter.GetCells(baseTexture);
             MaterialHolder = new MaterialHolder();
-
+            _levelCompleteView = initData.LevelCompleteView;
+            
             var filteredCells = FilterCells();
             var uniqueColors = GetUniqueColors(filteredCells);
 
@@ -153,8 +156,7 @@ namespace Code.Levels
                     _isEnded = true;
 
                     var percetn = vessel.CompareResult(_cells);
-                    
-                    Debug.Log(percetn);
+                    _levelCompleteView.Show(percetn);
                     
                     yield break;
                 }

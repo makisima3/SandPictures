@@ -1,4 +1,5 @@
-﻿using Plugins.SimpleFactory;
+﻿using Code.UI;
+using Plugins.SimpleFactory;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,5 +12,6 @@ namespace Code.InitDatas
         public Material BaseMaterial { get; set; }
         
         public Image TargetImage { get; set; }
+        public LevelCompleteView LevelCompleteView { get; set; }
     }
 }
