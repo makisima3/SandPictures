@@ -19,7 +19,6 @@ namespace Code
         [SerializeField] private List<Level> levels;
         [SerializeField] private WorldFactory worldFactory;
         [SerializeField] private UIFactory uiFactory;
-        [SerializeField] private CameraController cameraController;
         [SerializeField] private ColorsSelector colorsSelector;
         [SerializeField] private Material grainBaseMaterial;
         [SerializeField] private LevelCompleteView levelCompleteView;
@@ -49,10 +48,10 @@ namespace Code
 
             _inputCatcher.Initialize(new InputCatcherInitData() {Level = level});
             
-            cameraController.Initialize(new CameraControllerInitData()
+           /* cameraController.Initialize(new CameraControllerInitData()
             {
                 Size = level.Size,
-            });
+            });*/
         }
 
         private Level LoadLevel()

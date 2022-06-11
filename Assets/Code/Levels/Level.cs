@@ -14,11 +14,12 @@ namespace Code.Levels
     {
         [SerializeField] private Texture2D baseTexture;
         [SerializeField] private Vessel vessel;
+        [SerializeField] private ResultRenderer renderer;
         [SerializeField] private float dropRate = 0.5f;
         [SerializeField] private float dropGrainTime;
         [SerializeField] private float newRowReload = 1f;
         [SerializeField, Range(0f, 1f)] private float threshold;
-        
+
         private Coroutine spawnCoroutine;
         private Cell[,] _cells;
         private MaterialHolder.UniqueMaterial _currentMaterial;
@@ -27,21 +28,22 @@ namespace Code.Levels
         private int x;
         private int y;
         private LevelCompleteView _levelCompleteView;
-        
+
         [field: SerializeField] public MaterialHolder MaterialHolder { get; private set; }
         public Vector2Int Size => new Vector2Int(_cells.GetLength(0), _cells.GetLength(1));
-        
+
         public void Initialize(LevelInitData initData)
         {
             _cells = ImageConverter.GetCells(baseTexture);
             MaterialHolder = new MaterialHolder();
             _levelCompleteView = initData.LevelCompleteView;
-            
+
             var filteredCells = FilterCells();
             var uniqueColors = GetUniqueColors(filteredCells);
 
             var texture = GetTexture(filteredCells, baseTexture);
-            initData.TargetImage.sprite = Sprite.Create(texture,new Rect(0f,0f,texture.width,texture.height),Vector2.one/2);
+            initData.TargetImage.sprite =
+                Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), Vector2.one / 2);
 
             int id = 0;
             foreach (var color in uniqueColors)
@@ -50,29 +52,35 @@ namespace Code.Levels
                 {
                     color = color,
                 };
-                
-                MaterialHolder.Register(new MaterialHolder.UniqueMaterial(id,material));
+
+                MaterialHolder.Register(new MaterialHolder.UniqueMaterial(id, material));
                 id++;
             }
-            
-            x = _cells.GetLength(0);
+
+            x = _cells.GetLength(0) - 1;
             y = 0;
-            
+
+            renderer.Initialize(new ResultRendererInitData()
+            {
+                Size = Size,
+            });
+
             vessel.Initialize(new VesselInitData()
             {
                 WorldFactory = initData.WorldFactory,
                 DropGrainTime = dropGrainTime,
-                Size = new Vector2Int(_cells.GetLength(0),_cells.GetLength(1)),
+                Size = new Vector2Int(_cells.GetLength(0), _cells.GetLength(1)),
+                ResultRenderer = renderer,
             });
         }
 
         public void StartSpawn()
         {
-            if(_isEnded)
+            if (_isEnded)
                 return;
-            
+
             _isSpawn = true;
-            
+
             spawnCoroutine = StartCoroutine(Spawn());
         }
 
@@ -89,11 +97,11 @@ namespace Code.Levels
 
         public void SelectMaterial(MaterialHolder.UniqueMaterial material) => _currentMaterial = material;
 
-        private HashSet<Color> GetUniqueColors(Cell[] cells) =>cells.Select(c => c.Color).ToHashSet();
+        private HashSet<Color> GetUniqueColors(Cell[] cells) => cells.Select(c => c.Color).ToHashSet();
 
-        private Texture2D GetTexture(Cell[] cells,Texture2D baseTex)
+        private Texture2D GetTexture(Cell[] cells, Texture2D baseTex)
         {
-            var texture = new Texture2D(baseTex.width, baseTex.height, TextureFormat.ARGB32,true)
+            var texture = new Texture2D(baseTex.width, baseTex.height, TextureFormat.ARGB32, true)
             {
                 filterMode = FilterMode.Point
             };
@@ -102,7 +110,7 @@ namespace Code.Levels
             {
                 texture.SetPixel(cell.Position.x, cell.Position.y, cell.Color);
             }
-            
+
             texture.Apply();
             return texture;
         }
@@ -110,15 +118,15 @@ namespace Code.Levels
         private Cell[] FilterCells()
         {
             var cells = _cells.Cast<Cell>().ToArray();
-            
+
             for (int i = 0; i < cells.Length; i++)
             {
                 var cell1 = cells[i];
-                
+
                 for (int j = i; j < cells.Length; j++)
                 {
                     var cell2 = cells[j];
-                    
+
                     if (cell1.Color.ToVector4().DistanceTo(cell2.Color.ToVector4()) < threshold)
                     {
                         cell2.Color = cell1.Color;
@@ -131,35 +139,38 @@ namespace Code.Levels
                 var ca = cells.First(c => c.Position == cell.Position);
                 cell.Color = ca.Color;
             }
-            
+
             return cells;
         }
-        
 
+        private int step = -1;
         private IEnumerator Spawn()
         {
             while (_isSpawn)
             {
-                for (int i = x-1; i >= 0; i--)
+                for (int i = x; i >= 0 && i < _cells.GetLength(0); i += step)
                 {
-                    vessel.SpawnGrain(_cells[i,y], _currentMaterial);
-                    
-                    x--;
+                    vessel.SpawnGrain(_cells[i, y], _currentMaterial);
+
+                    x+= step;
                     yield return new WaitForSeconds(dropRate);
                 }
 
-                x = _cells.GetLength(0);
+                step *= -1;
+
+                x = step > 0? 0: _cells.GetLength(0)-1;
                 y++;
 
                 if (y >= _cells.GetLength(1))
                 {
                     _isEnded = true;
 
-                    var percetn = vessel.CompareResult(_cells);
+                    var percetn = vessel.CompareResultV2(_cells);
                     _levelCompleteView.Show(percetn);
-                    
+
                     yield break;
                 }
+
                 yield return new WaitForSeconds(newRowReload);
             }
         }

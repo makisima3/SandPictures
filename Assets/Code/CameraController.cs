@@ -9,7 +9,7 @@ namespace Code
         
         public void Initialize(CameraControllerInitData initData)
         {
-            transform.position = new Vector3(initData.Size.x / 2f, initData.Size.y / 2f, -initData.Size.x/2 * 3 - 10f);
+            //transform.localPosition = new Vector3(initData.Size.x / 2f, initData.Size.y / 2f, -initData.Size.x/2 * 3 - 10f);
         }
     }
 }
