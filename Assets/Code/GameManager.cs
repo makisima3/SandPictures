@@ -26,6 +26,8 @@ namespace Code
 
         private void Awake()
         {
+            Application.targetFrameRate = 120;
+            
             levelCompleteView.Initialize(new LevelCompleteInitData(){});
             
             _levelStorageObject =
@@ -47,6 +49,8 @@ namespace Code
             });
 
             _inputCatcher.Initialize(new InputCatcherInitData() {Level = level});
+            
+            
             
            /* cameraController.Initialize(new CameraControllerInitData()
             {
