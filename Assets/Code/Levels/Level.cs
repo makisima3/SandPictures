@@ -19,6 +19,7 @@ namespace Code.Levels
         [SerializeField] private float dropGrainTime;
         [SerializeField] private float newRowReload = 1f;
         [SerializeField, Range(0f, 1f)] private float threshold;
+        [SerializeField] private bool _isLeftFirst;
 
         private Coroutine spawnCoroutine;
         private Cell[,] _cells;
@@ -262,10 +263,19 @@ namespace Code.Levels
                 
                 foreach (var cellGroup in _zones.Skip(currentZoneIndex).First().Where(c => !c.IsSpawned).GroupBy(c => c.Position.y).OrderBy(c => c.Key))
                 {
-                    vessel.Move(cellGroup.First().Position, newRowReload);
+                    var group = cellGroup.OrderBy(c => c.Position.x);
+
+                    if (_isLeftFirst)
+                        group = group.OrderByDescending(c => c.Position.x);
+                    
+                    _isLeftFirst = !_isLeftFirst;
+                    
+                    vessel.Move(group.First().Position, newRowReload);
                     yield return new WaitForSeconds(newRowReload);
 
-                    foreach (var cell in cellGroup.OrderBy(c => c.Position.x))
+                    
+                    
+                    foreach (var cell in group)
                     {
                         if (!_isSpawn)
                             break;
@@ -274,6 +284,8 @@ namespace Code.Levels
                         cell.IsSpawned = true;
                         yield return new WaitForSeconds(dropRate);
                     }
+
+                    
                 }
 
                 
