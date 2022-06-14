@@ -73,6 +73,7 @@ namespace Code.Levels
                 DropGrainTime = dropGrainTime,
                 Size = new Vector2Int(_cells.GetLength(0), _cells.GetLength(1)),
                 ResultRenderer = renderer,
+                Cells = _cells
             });
 
             _zones = _cells

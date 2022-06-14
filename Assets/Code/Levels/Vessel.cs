@@ -42,7 +42,21 @@ namespace Code.Levels
             var distance = Vector3.Distance(pointA.position, pointB.position);
             _step = distance / initData.Size.x;
 
-            
+            foreach (var cell in initData.Cells)
+            {
+                var grain = _worldFactory.Create<Grain, GrainInitData>(new GrainInitData()
+                {
+                    EndPosition = _renderer.GetPosition(cell.Position),
+                    SpawnPosition = Vector3.one * 1000,
+                    TimeToMove = _dropGrainTime,
+                    RenderParent = _renderer.Holder,
+                    RenderPosition = _renderer.GetPosition(cell.Position),
+                });
+                
+                grain.gameObject.SetActive(false);
+                
+                _grains[cell.Position.x, cell.Position.y] = grain;
+            }
         }
 
         public void Move(Vector2Int position, float time)
@@ -61,18 +75,12 @@ namespace Code.Levels
             var sposition = spawnPointView.position;
             sposition.x = _renderer.GetPosition(cell.Position).x;
             sposition.y = _renderer.GetPosition(Vector2Int.up * 100).y;
-            
-            
-            var grain = _worldFactory.Create<Grain, GrainInitData>(new GrainInitData()
-            {
-                UniqueMaterial = material,
-                EndPosition = _renderer.GetPosition(cell.Position),
-                SpawnPosition = sposition,
-                TimeToMove = _dropGrainTime,
-                RenderParent = _renderer.Holder,
-                RenderPosition = _renderer.GetPosition(cell.Position),
-            });
 
+
+            var grain = _grains[cell.Position.x, cell.Position.y];
+            grain.transform.position = sposition;
+            grain.SetMaterial(material);
+            grain.gameObject.SetActive(true);
             grain.transform.SetParent(grainsHolder);
             grain.GoToPlace();
 

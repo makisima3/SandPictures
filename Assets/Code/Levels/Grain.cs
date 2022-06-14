@@ -20,14 +20,20 @@ namespace Code.Levels
         
         public void Initialize(GrainInitData initData)
         {
-            meshRenderer.sharedMaterial = initData.UniqueMaterial.Material;
+            
             transform.position = initData.SpawnPosition;
             _endPosition = initData.EndPosition;
             _renderPosition = initData.RenderPosition;
             _timeToMove = initData.TimeToMove;
             GridPosition = initData.GridPosition;
-            Color = initData.UniqueMaterial.Material.color;
+           
             _renderParent = initData.RenderParent;
+        }
+
+        public void SetMaterial(MaterialHolder.UniqueMaterial material)
+        {
+            meshRenderer.sharedMaterial = material.Material;
+            Color = material.Material.color;
         }
 
         public void GoToPlace()
