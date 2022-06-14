@@ -406,9 +406,9 @@ MonoBehaviour:
   baseTexture: {fileID: 2800000, guid: 54fe7b8960e1a104c8b3a8b9ab733946, type: 3}
   vessel: {fileID: 1418953858471844312}
   renderer: {fileID: 570129199169865884}
-  dropRate: 0.015
+  dropRate: 0
   dropGrainTime: 0.5
-  newRowReload: 0
+  newRowReload: 0.5
   threshold: 0.226
   <MaterialHolder>k__BackingField:
     _uniqueMaterials: []
@@ -869,6 +869,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4334998559187529132}
     m_Modifications:
+    - target: {fileID: 2393428599459702222, guid: d00a138b0e4f46747a60867274260551, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2671148080579687401, guid: d00a138b0e4f46747a60867274260551, type: 3}
       propertyPath: m_LocalScale.x
       value: 9.3361435

@@ -49,13 +49,6 @@ namespace Code
             });
 
             _inputCatcher.Initialize(new InputCatcherInitData() {Level = level});
-            
-            
-            
-           /* cameraController.Initialize(new CameraControllerInitData()
-            {
-                Size = level.Size,
-            });*/
         }
 
         private Level LoadLevel()

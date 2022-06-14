@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Code.InitDatas;
+using DG.Tweening;
 using Plugins.SimpleFactory;
 using UnityEngine;
 
@@ -42,14 +43,18 @@ namespace Code.Levels
             _step = distance / initData.Size.x;
         }
 
-        public void SpawnGrain(Cell cell, MaterialHolder.UniqueMaterial material)
+        public void Move(Vector2Int position, float time)
+        {
+            var pos = spawnPointView.position;
+            pos.x = GetWorldPosition(position).x;
+            spawnPointView.DOMove(pos,time);
+        }
+        
+        public void SpawnGrain(Cell cell, MaterialHolder.UniqueMaterial material,float time)
         {
             SoundManager.Instance.PlaySound();
-
-            var position = spawnPointView.position;
-            position.x = GetWorldPosition(cell.Position).x;
-            spawnPointView.position = position;
-           //spawnPointView.position = pointA.position + Vector3.left * ( _size.x - cell.Position.x) * _step;
+            Move(cell.Position, time);
+            //spawnPointView.position = pointA.position + Vector3.left * ( _size.x - cell.Position.x) * _step;
 
             var sposition = spawnPointView.position;
             sposition.x = _renderer.GetPosition(cell.Position).x;
