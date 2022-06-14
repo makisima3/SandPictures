@@ -41,6 +41,8 @@ namespace Code.Levels
             
             var distance = Vector3.Distance(pointA.position, pointB.position);
             _step = distance / initData.Size.x;
+
+            
         }
 
         public void Move(Vector2Int position, float time)

@@ -28,6 +28,8 @@ namespace Code.Levels
         private int x;
         private int y;
         private LevelCompleteView _levelCompleteView;
+        private IOrderedEnumerable<IGrouping<Color, Cell>> _zones;
+        private int currentZoneIndex =0;
 
         [field: SerializeField] public MaterialHolder MaterialHolder { get; private set; }
         public Vector2Int Size => new Vector2Int(_cells.GetLength(0), _cells.GetLength(1));
@@ -72,6 +74,11 @@ namespace Code.Levels
                 Size = new Vector2Int(_cells.GetLength(0), _cells.GetLength(1)),
                 ResultRenderer = renderer,
             });
+
+            _zones = _cells
+                .Cast<Cell>()
+                .GroupBy(c => c.Color)
+                .OrderBy(z => z.Sum(c => c.Position.y) / z.Count());
         }
 
         public void StartSpawn()
@@ -81,7 +88,7 @@ namespace Code.Levels
 
             _isSpawn = true;
 
-            spawnCoroutine = StartCoroutine(SpawnV2());
+            spawnCoroutine = StartCoroutine(SpawnV3());
         }
 
         public void StopSpawn()
@@ -151,7 +158,7 @@ namespace Code.Levels
             {
                 for (int i = x; i >= 0 && i < _cells.GetLength(0); i += step)
                 {
-                    vessel.SpawnGrain(_cells[i, y], _currentMaterial,dropRate);
+                    vessel.SpawnGrain(_cells[i, y], _currentMaterial, dropRate);
 
                     x += step;
                     yield return new WaitForSeconds(dropRate);
@@ -184,29 +191,28 @@ namespace Code.Levels
                     .Cast<Cell>()
                     .Where(c => c.Color == _currentMaterial.Color && !c.IsSpawned)
                     .GroupBy(c => c.Position.y)
-                    .OrderBy( c => c.Key);
+                    .OrderBy(c => c.Key);
 
                 if (!cells.Any())
                 {
                     _isSpawn = false;
                     break;
                 }
-                
+
                 foreach (var cellGroup in cells)
                 {
-                    vessel.Move(cellGroup.First().Position,newRowReload);
+                    vessel.Move(cellGroup.First().Position, newRowReload);
                     yield return new WaitForSeconds(newRowReload);
-                    
+
                     foreach (var cell in cellGroup.OrderBy(c => c.Position.x))
                     {
                         if (!_isSpawn)
                             break;
 
-                        vessel.SpawnGrain(cell, _currentMaterial,dropRate);
+                        vessel.SpawnGrain(cell, _currentMaterial, dropRate);
                         cell.IsSpawned = true;
                         yield return new WaitForSeconds(dropRate);
                     }
-                    
                 }
 
                 if (_cells.Cast<Cell>().All(c => c.IsSpawned))
@@ -218,6 +224,58 @@ namespace Code.Levels
 
                     yield break;
                 }
+            }
+        }
+
+
+        private IEnumerator SpawnV3()
+        {
+            while (_isSpawn)
+            {
+                var t = true;
+                foreach (var cellGroup in _zones.Skip(currentZoneIndex).First().GroupBy(c => c.Position.y))
+                {
+                    if(cellGroup.All(c => c.IsSpawned))
+                        continue;
+
+                    t = false;
+                }
+
+                if (t)
+                {
+                    _isSpawn = false;
+                    currentZoneIndex += 1;
+
+                    if (_cells.Cast<Cell>().All(c => c.IsSpawned))
+                    {
+                        _isEnded = true;
+
+                        var percetn = vessel.CompareResultV2(_cells);
+                        _levelCompleteView.Show(percetn);
+
+                        yield break;
+                    }
+
+                    break;
+                }
+                
+                foreach (var cellGroup in _zones.Skip(currentZoneIndex).First().Where(c => !c.IsSpawned).GroupBy(c => c.Position.y).OrderBy(c => c.Key))
+                {
+                    vessel.Move(cellGroup.First().Position, newRowReload);
+                    yield return new WaitForSeconds(newRowReload);
+
+                    foreach (var cell in cellGroup.OrderBy(c => c.Position.x))
+                    {
+                        if (!_isSpawn)
+                            break;
+
+                        vessel.SpawnGrain(cell, _currentMaterial, dropRate);
+                        cell.IsSpawned = true;
+                        yield return new WaitForSeconds(dropRate);
+                    }
+                }
+
+                
             }
         }
     }

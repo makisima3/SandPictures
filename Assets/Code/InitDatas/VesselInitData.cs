@@ -11,5 +11,6 @@ namespace Code.InitDatas
         public SimpleFactory WorldFactory { get; set; }
         public  ResultRenderer ResultRenderer { get; set; }
         public float newRowDelay { get; set; }
+        public Cell[,] Cells { get; set; }
     }
 }
