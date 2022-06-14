@@ -54,7 +54,7 @@ namespace Code.Levels
                 });
                 
                 grain.gameObject.SetActive(false);
-                
+                grain.transform.SetParent(grainsHolder);
                 _grains[cell.Position.x, cell.Position.y] = grain;
             }
         }
@@ -81,10 +81,7 @@ namespace Code.Levels
             grain.transform.position = sposition;
             grain.SetMaterial(material);
             grain.gameObject.SetActive(true);
-            grain.transform.SetParent(grainsHolder);
             grain.GoToPlace();
-
-            _grains[cell.Position.x, cell.Position.y] = grain;
         }
 
         private Vector3 GetWorldPosition(Vector2Int position)
