@@ -411,6 +411,7 @@ MonoBehaviour:
   newRowReload: 0
   threshold: 0.226
   _isLeftFirst: 1
+  oneStepSpawnGrainsCount: 4
   <MaterialHolder>k__BackingField:
     _uniqueMaterials: []
 --- !u!1 &6282687196321772776

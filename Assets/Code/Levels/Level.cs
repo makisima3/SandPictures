@@ -20,6 +20,7 @@ namespace Code.Levels
         [SerializeField] private float newRowReload = 1f;
         [SerializeField, Range(0f, 1f)] private float threshold;
         [SerializeField] private bool _isLeftFirst;
+        [SerializeField] private int oneStepSpawnGrainsCount = 2;
 
         private Coroutine spawnCoroutine;
         private Cell[,] _cells;
@@ -273,17 +274,20 @@ namespace Code.Levels
                     vessel.Move(group.First().Position, newRowReload);
                     yield return new WaitForSeconds(newRowReload);
 
-                    
-                    
+
+                    //var counter = oneStepSpawnGrainsCount;
                     foreach (var cell in group)
                     {
                         if (!_isSpawn)
                             break;
 
+                       // counter--;
                         vessel.SpawnGrain(cell, _currentMaterial, dropRate);
                         cell.IsSpawned = true;
                         //yield return new WaitForSeconds(dropRate);
-                        yield return new WaitForEndOfFrame();
+                        /*if (counter >= 0) continue;
+                        counter = oneStepSpawnGrainsCount;
+                        yield return null;*/
                     }
 
                     
