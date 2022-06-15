@@ -331,6 +331,8 @@ MonoBehaviour:
   button: {fileID: 7015503412978217330}
   colorImage: {fileID: 6664572698725838019}
   selectedImage: {fileID: 4750594085059390049}
+  attachmentSelectedSize: 50
+  useSelectedImage: 0
 --- !u!114 &6154081026838583673
 MonoBehaviour:
   m_ObjectHideFlags: 0

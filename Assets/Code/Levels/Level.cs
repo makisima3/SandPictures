@@ -21,7 +21,8 @@ namespace Code.Levels
         [SerializeField, Range(0f, 1f)] private float threshold;
         [SerializeField] private bool _isLeftFirst;
         [SerializeField] private int oneStepSpawnGrainsCount = 2;
-
+        [SerializeField] private ToolView toolView;
+        
         private Coroutine spawnCoroutine;
         private Cell[,] _cells;
         private MaterialHolder.UniqueMaterial _currentMaterial;
@@ -78,6 +79,12 @@ namespace Code.Levels
                 Cells = _cells
             });
 
+            toolView.Initialize(new ToolViewInitData()
+            {
+                Colors = uniqueColors.ToList(),
+                firstColor = uniqueColors.First()
+            });
+            
             _zones = _cells
                 .Cast<Cell>()
                 .GroupBy(c => c.Color)
@@ -105,7 +112,11 @@ namespace Code.Levels
             }
         }
 
-        public void SelectMaterial(MaterialHolder.UniqueMaterial material) => _currentMaterial = material;
+        public void SelectMaterial(MaterialHolder.UniqueMaterial material)
+        {
+            _currentMaterial = material;
+            toolView.SetToolPipe(material.Color);
+        }
 
         private HashSet<Color> GetUniqueColors(Cell[] cells) => cells.Select(c => c.Color).ToHashSet();
 
@@ -286,8 +297,8 @@ namespace Code.Levels
                         cell.IsSpawned = true;
                         //yield return new WaitForSeconds(dropRate);
                         /*if (counter >= 0) continue;
-                        counter = oneStepSpawnGrainsCount;
-                        yield return null;*/
+                        counter = oneStepSpawnGrainsCount;*/
+                        yield return null;
                     }
 
                     
