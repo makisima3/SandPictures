@@ -62,7 +62,7 @@ namespace Code.Levels
         public void Move(Vector2Int position, float time)
         {
             var pos = spawnPointView.position;
-            pos.x = GetWorldPosition(position).x;
+            pos.x = (pointB.position + Vector3.right * (_step * position.x)).x;
             spawnPointView.DOMove(pos,time);
         }
         
@@ -74,7 +74,7 @@ namespace Code.Levels
 
             var sposition = spawnPointView.position;
             sposition.x = _renderer.GetPosition(cell.Position).x;
-            sposition.y = _renderer.GetPosition(Vector2Int.up * 100).y;
+            sposition.y = _renderer.GetPosition(Vector2Int.up * 150).y;
 
 
             var grain = _grains[cell.Position.x, cell.Position.y];
@@ -130,6 +130,11 @@ namespace Code.Levels
         private void Test()
         {
             Debug.Log(CompareResultV2(_cells));
+        }
+        
+        public float Remap(float value, float fromLower, float fromUpper, float toLower, float toUpper)
+        {
+            return (toUpper - toLower) * ((value - fromLower) / (fromUpper - fromLower)) + toLower;
         }
     }
 }

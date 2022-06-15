@@ -403,13 +403,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1d13ff4d32646d5b7849347c626766e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseTexture: {fileID: 2800000, guid: 54fe7b8960e1a104c8b3a8b9ab733946, type: 3}
+  baseTexture: {fileID: 2800000, guid: 72b4ddd59ee9de94c8968fbaa3ee1a1d, type: 3}
   vessel: {fileID: 1418953858471844312}
   renderer: {fileID: 570129199169865884}
   dropRate: 0
-  dropGrainTime: 0.5
-  newRowReload: 0.5
+  dropGrainTime: 0.1
+  newRowReload: 0
   threshold: 0.226
+  _isLeftFirst: 1
   <MaterialHolder>k__BackingField:
     _uniqueMaterials: []
 --- !u!1 &6282687196321772776
@@ -438,7 +439,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6282687196321772776}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 25, y: 25, z: -10}
+  m_LocalPosition: {x: 37.5, y: 37.5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -472,7 +473,7 @@ Camera:
   far clip plane: 1000
   field of view: 26.991467
   orthographic: 1
-  orthographic size: 25
+  orthographic size: 37.5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -500,6 +501,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91bacc72db6747c7ad733c430be5140b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 456951947105623881}
 --- !u!1 &7018559708893826960
 GameObject:
   m_ObjectHideFlags: 0
@@ -977,9 +979,25 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7195316388448667621, guid: d00a138b0e4f46747a60867274260551, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 51
+      objectReference: {fileID: 0}
+    - target: {fileID: 7195316388448667621, guid: d00a138b0e4f46747a60867274260551, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 72.48
+      objectReference: {fileID: 0}
     - target: {fileID: 7379867183528120171, guid: d00a138b0e4f46747a60867274260551, type: 3}
       propertyPath: m_RootOrder
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7379867183528120171, guid: d00a138b0e4f46747a60867274260551, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7379867183528120171, guid: d00a138b0e4f46747a60867274260551, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 72.48
       objectReference: {fileID: 0}
     - target: {fileID: 7526270768739186425, guid: d00a138b0e4f46747a60867274260551, type: 3}
       propertyPath: m_RootOrder

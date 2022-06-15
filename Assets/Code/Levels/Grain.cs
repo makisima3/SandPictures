@@ -8,7 +8,7 @@ namespace Code.Levels
     public class Grain : MonoBehaviour,IInitialized<GrainInitData>
     {
         [SerializeField] private MeshRenderer meshRenderer;
-
+        [SerializeField] private TrailRenderer trailRenderer;
         private Vector3 _endPosition;
         private Vector3 _renderPosition;
         private float _timeToMove;
@@ -20,7 +20,7 @@ namespace Code.Levels
         
         public void Initialize(GrainInitData initData)
         {
-            
+            trailRenderer.enabled = false;
             transform.position = initData.SpawnPosition;
             _endPosition = initData.EndPosition;
             _renderPosition = initData.RenderPosition;
@@ -34,6 +34,11 @@ namespace Code.Levels
         {
             meshRenderer.sharedMaterial = material.Material;
             Color = material.Material.color;
+            
+            trailRenderer.startColor = Color;
+            trailRenderer.endColor = Color;
+            
+            trailRenderer.enabled = true;
         }
 
         public void GoToPlace()
@@ -43,6 +48,7 @@ namespace Code.Levels
                 {
                     transform.SetParent(_renderParent);
                     transform.position = _renderPosition;
+                    trailRenderer.enabled = false;
                 });
         }
     }

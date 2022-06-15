@@ -282,7 +282,8 @@ namespace Code.Levels
 
                         vessel.SpawnGrain(cell, _currentMaterial, dropRate);
                         cell.IsSpawned = true;
-                        yield return new WaitForSeconds(dropRate);
+                        //yield return new WaitForSeconds(dropRate);
+                        yield return new WaitForEndOfFrame();
                     }
 
                     
