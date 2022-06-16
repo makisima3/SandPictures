@@ -403,7 +403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1d13ff4d32646d5b7849347c626766e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseTexture: {fileID: 2800000, guid: 72b4ddd59ee9de94c8968fbaa3ee1a1d, type: 3}
+  baseTexture: {fileID: 2800000, guid: 55892647e93ffda43839ac517432380a, type: 3}
   vessel: {fileID: 1418953858471844312}
   renderer: {fileID: 570129199169865884}
   dropRate: 0
@@ -1105,7 +1105,6 @@ MonoBehaviour:
   - {fileID: 3636325216222432240}
   - {fileID: 5475800437630755267}
   rimeToRotate: 1
-  index: 1
 --- !u!1 &2225649793347299166 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7286987846716196988, guid: d00a138b0e4f46747a60867274260551, type: 3}
