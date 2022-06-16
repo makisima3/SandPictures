@@ -2,7 +2,6 @@
 using System.Linq;
 using Code.InitDatas;
 using DG.Tweening;
-using OpenCover.Framework.Model;
 using Plugins.RobyyUtils;
 using Plugins.SimpleFactory;
 using UnityEngine;
@@ -11,12 +10,6 @@ namespace Code.Levels
 {
     public class ToolView : MonoBehaviour, IInitialized<ToolViewInitData>
     {
-        public class ColoredToolPipe
-        {
-            public ToolPipeView ToolPipeView { get; set; }
-            public Color Color { get; set; }
-        }
-
         [SerializeField] private Transform view;
         [SerializeField] private List<ToolPipeView> toolPipeViews;
         [SerializeField] private float rimeToRotate = 0.1f;
