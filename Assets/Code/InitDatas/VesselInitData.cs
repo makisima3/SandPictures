@@ -1,6 +1,7 @@
 ﻿using Code.Levels;
 using Plugins.SimpleFactory;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Code.InitDatas
 {
@@ -11,6 +12,7 @@ namespace Code.InitDatas
         public SimpleFactory WorldFactory { get; set; }
         public  ResultRenderer ResultRenderer { get; set; }
         public float newRowDelay { get; set; }
+        public UnityEvent<bool> OnSpawnStateChange { get; set; }
         public Cell[,] Cells { get; set; }
     }
 }

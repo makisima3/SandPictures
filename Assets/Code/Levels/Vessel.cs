@@ -18,6 +18,7 @@ namespace Code.Levels
         [SerializeField] private Transform grainsHolder;
         [SerializeField] private Transform pointA;
         [SerializeField] private Transform pointB;
+        [SerializeField] private ParticleSystem sandPS;
         
         private ResultRenderer _renderer;
         private Grid _grid;
@@ -38,6 +39,8 @@ namespace Code.Levels
             _renderer = initData.ResultRenderer;
             _size = initData.Size;
             spawnPointView.transform.position = pointA.position;
+            sandPS.gameObject.SetActive(false);
+            initData.OnSpawnStateChange.AddListener((isSpawn) => {sandPS.gameObject.SetActive(isSpawn);});
             
             var distance = Vector3.Distance(pointA.position, pointB.position);
             _step = distance / initData.Size.x;
@@ -64,12 +67,20 @@ namespace Code.Levels
             var pos = spawnPointView.position;
             pos.x = (pointB.position + Vector3.right * (_step * position.x)).x;
             spawnPointView.DOMove(pos,time);
+            
+            pos = spawnPointView.position;
+            pos.x = _renderer.GetPosition(position).x;
+            pos.y = _renderer.GetPosition(Vector2Int.up * 150).y;
+            sandPS.transform.DOMove(pos,time);
         }
         
         public void SpawnGrain(Cell cell, MaterialHolder.UniqueMaterial material,float time)
         {
             SoundManager.Instance.PlaySound();
             Move(cell.Position, time);
+
+            sandPS.startColor = material.Color;
+            
             //spawnPointView.position = pointA.position + Vector3.left * ( _size.x - cell.Position.x) * _step;
 
             var sposition = spawnPointView.position;

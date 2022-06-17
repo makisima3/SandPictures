@@ -6,6 +6,7 @@ using Code.UI;
 using Code.Utils;
 using Plugins.SimpleFactory;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 
 namespace Code.Levels
@@ -35,6 +36,7 @@ namespace Code.Levels
         private int currentZoneIndex =0;
 
         [field: SerializeField] public MaterialHolder MaterialHolder { get; private set; }
+        public UnityEvent<bool> OnSpawnStateChange;
         public Vector2Int Size => new Vector2Int(_cells.GetLength(0), _cells.GetLength(1));
 
         public void Initialize(LevelInitData initData)
@@ -76,7 +78,8 @@ namespace Code.Levels
                 DropGrainTime = dropGrainTime,
                 Size = new Vector2Int(_cells.GetLength(0), _cells.GetLength(1)),
                 ResultRenderer = renderer,
-                Cells = _cells
+                Cells = _cells,
+                OnSpawnStateChange = OnSpawnStateChange
             });
 
             toolView.Initialize(new ToolViewInitData()
@@ -97,14 +100,14 @@ namespace Code.Levels
                 return;
 
             _isSpawn = true;
-
+            OnSpawnStateChange.Invoke(_isSpawn);
             spawnCoroutine = StartCoroutine(SpawnV3());
         }
 
         public void StopSpawn()
         {
             _isSpawn = false;
-
+            OnSpawnStateChange.Invoke(_isSpawn);
             if (spawnCoroutine != null)
             {
                 StopCoroutine(spawnCoroutine);
