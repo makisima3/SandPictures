@@ -47,10 +47,11 @@ namespace Code.Levels
 
             foreach (var cell in initData.Cells)
             {
-                var grain = _worldFactory.Create<Grain, GrainInitData>(new GrainInitData()
+               var grain = _worldFactory.Create<Grain, GrainInitData>(new GrainInitData()
                 {
                     EndPosition = _renderer.GetPosition(cell.Position),
-                    SpawnPosition = Vector3.one * 1000,
+                    //SpawnPosition = Vector3.one * 1000,
+                    SpawnPosition = _renderer.GetPosition(cell.Position),
                     TimeToMove = _dropGrainTime,
                     RenderParent = _renderer.Holder,
                     RenderPosition = _renderer.GetPosition(cell.Position),
@@ -68,7 +69,7 @@ namespace Code.Levels
             pos.x = (pointB.position + Vector3.right * (_step * position.x)).x;
             spawnPointView.DOMove(pos,time);
             
-            pos = spawnPointView.position;
+            pos =  sandPS.transform.position;
             pos.x = _renderer.GetPosition(position).x;
             pos.y = _renderer.GetPosition(Vector2Int.up * 150).y;
             sandPS.transform.DOMove(pos,time);
@@ -83,13 +84,13 @@ namespace Code.Levels
             
             //spawnPointView.position = pointA.position + Vector3.left * ( _size.x - cell.Position.x) * _step;
 
-            var sposition = spawnPointView.position;
+            /*var sposition = spawnPointView.position;
             sposition.x = _renderer.GetPosition(cell.Position).x;
-            sposition.y = _renderer.GetPosition(Vector2Int.up * 150).y;
+            sposition.y = _renderer.GetPosition(Vector2Int.up * 150).y;*/
 
 
             var grain = _grains[cell.Position.x, cell.Position.y];
-            grain.transform.position = sposition;
+            /*grain.transform.position = sposition;*/
             grain.SetMaterial(material);
             grain.gameObject.SetActive(true);
             grain.GoToPlace();

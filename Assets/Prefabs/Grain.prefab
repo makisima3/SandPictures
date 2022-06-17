@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 485548614983991910}
   - component: {fileID: 6614230457610915939}
   - component: {fileID: 2451853603177701065}
+  - component: {fileID: 242235629098448074}
   m_Layer: 0
   m_Name: Grain
   m_TagString: Untagged
@@ -99,6 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 485548614983991910}
   trailRenderer: {fileID: 2451853603177701065}
+  userTrail: 0
 --- !u!96 &2451853603177701065
 TrailRenderer:
   serializedVersion: 2
@@ -207,3 +209,16 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
   m_Emitting: 1
+--- !u!65 &242235629098448074
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5370542757655941360}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
