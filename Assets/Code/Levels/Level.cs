@@ -8,6 +8,7 @@ using Plugins.SimpleFactory;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace Code.Levels
 {
@@ -26,6 +27,8 @@ namespace Code.Levels
         
         private Coroutine spawnCoroutine;
         private Cell[,] _cells;
+        private List<Color> _uniqueColors;
+        private Texture2D _resultTexture;
         private MaterialHolder.UniqueMaterial _currentMaterial;
         private bool _isSpawn;
         private bool _isEnded;
@@ -34,6 +37,7 @@ namespace Code.Levels
         private LevelCompleteView _levelCompleteView;
         private IOrderedEnumerable<IGrouping<Color, Cell>> _zones;
         private int currentZoneIndex =0;
+        private Image _targetImage;
 
         [field: SerializeField] public MaterialHolder MaterialHolder { get; private set; }
         public UnityEvent<bool> OnSpawnStateChange;
@@ -41,19 +45,25 @@ namespace Code.Levels
 
         public void Initialize(LevelInitData initData)
         {
-            _cells = ImageConverter.GetCells(baseTexture);
+            //_cells = ImageConverter.GetCells(baseTexture);
             MaterialHolder = new MaterialHolder();
             _levelCompleteView = initData.LevelCompleteView;
+            _targetImage = initData.TargetImage;
+            
+            GetCells(baseTexture);
+            
+            _targetImage.sprite = Sprite
+                .Create(_resultTexture, new Rect(0f, 0f, _resultTexture.width, _resultTexture.height), Vector2.one / 2);
+            
+            //var filteredCells = FilterCells();
+           // _uniqueColors = GetUniqueColors(filteredCells);
 
-            var filteredCells = FilterCells();
-            var uniqueColors = GetUniqueColors(filteredCells);
-
-            var texture = GetTexture(filteredCells, baseTexture);
-            initData.TargetImage.sprite =
-                Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), Vector2.one / 2);
+           
+           /* initData.TargetImage.sprite =
+                Sprite.Create(_resultTexture, new Rect(0f, 0f, _resultTexture.width, _resultTexture.height), Vector2.one / 2);*/
 
             int id = 0;
-            foreach (var color in uniqueColors)
+            foreach (var color in _uniqueColors)
             {
                 var material = new Material(initData.BaseMaterial)
                 {
@@ -84,8 +94,8 @@ namespace Code.Levels
 
             toolView.Initialize(new ToolViewInitData()
             {
-                Colors = uniqueColors.ToList(),
-                firstColor = uniqueColors.First()
+                Colors = _uniqueColors.ToList(),
+                firstColor = _uniqueColors.First()
             });
             
             _zones = _cells
@@ -165,6 +175,51 @@ namespace Code.Levels
             }
 
             return cells;
+        }
+        
+        public void GetCells(Texture2D baseTex)
+        {
+            _resultTexture = new Texture2D(baseTex.width, baseTex.height, TextureFormat.ARGB32, true)
+            {
+                filterMode = FilterMode.Point
+            };
+            
+            _cells = new Cell[_resultTexture.width,_resultTexture.height];
+            _uniqueColors = new List<Color>();
+            
+            for (int x = 0; x < _resultTexture.width; x++)
+            {
+                for (int y = 0; y < _resultTexture.height; y++)
+                {
+                    var color = baseTex.GetPixel(x, y);
+
+                    var uniqueColor = _uniqueColors.FirstOrDefault(c => CheckThreshold(c,color));
+                    
+                    if (uniqueColor != default)
+                    {
+                        color = uniqueColor;
+                    }
+                    else
+                    {
+                        _uniqueColors.Add(color);
+                    }
+                    
+                    _cells[x, y] = new Cell()
+                    {
+                        Position = new Vector2Int(x, y),
+                        Color = color
+                    };
+
+                    _resultTexture.SetPixel(x, y, color);
+                }
+            }
+            
+            _resultTexture.Apply();
+        }
+
+        private bool CheckThreshold(Color color1, Color color2)
+        {
+            return color1.ToVector4().DistanceTo(color2.ToVector4()) < threshold;
         }
 
         private int step = -1;
@@ -289,18 +344,20 @@ namespace Code.Levels
                     yield return new WaitForSeconds(newRowReload);
 
 
-                    //var counter = oneStepSpawnGrainsCount;
+                    var counter = oneStepSpawnGrainsCount;
                     foreach (var cell in group)
                     {
                         if (!_isSpawn)
                             break;
 
-                       // counter--;
+                        counter--;
+                        
                         vessel.SpawnGrain(cell, _currentMaterial, dropRate);
                         cell.IsSpawned = true;
-                        //yield return new WaitForSeconds(dropRate);
-                        /*if (counter >= 0) continue;
-                        counter = oneStepSpawnGrainsCount;*/
+                        
+                        if (counter >= 0) continue;
+                        
+                        counter = oneStepSpawnGrainsCount;
                         yield return null;
                     }
 

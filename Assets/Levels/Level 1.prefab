@@ -1,50 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &83755051004587001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7773731180436977738}
-  - component: {fileID: 1747418200453818698}
-  m_Layer: 0
-  m_Name: Particle Collider (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7773731180436977738
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 83755051004587001}
-  m_LocalRotation: {x: -0, y: -0, z: -0.81553173, w: 0.57871234}
-  m_LocalPosition: {x: 57.5, y: 18.9, z: 3.7366676}
-  m_LocalScale: {x: 35.522186, y: 12.018787, z: 37.0617}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4334998559187529132}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -109.28}
---- !u!65 &1747418200453818698
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 83755051004587001}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &234380224263472117
 GameObject:
   m_ObjectHideFlags: 0
@@ -71,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 234380224263472117}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -205.9, y: -63.2, z: 0}
+  m_LocalPosition: {x: -595, y: -218, z: 237}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -400,51 +355,6 @@ Transform:
   m_Father: {fileID: 4334998559187529132}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3131742267370926396
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 80813688569349285}
-  - component: {fileID: 1937017525920433843}
-  m_Layer: 0
-  m_Name: Particle Collider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &80813688569349285
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3131742267370926396}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 27.4, y: 4.2, z: 3.7366676}
-  m_LocalScale: {x: 86.114395, y: 3.327, z: 37.0617}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4334998559187529132}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1937017525920433843
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3131742267370926396}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4334998559187529134
 GameObject:
   m_ObjectHideFlags: 0
@@ -479,9 +389,6 @@ Transform:
   - {fileID: 5071987327604113135}
   - {fileID: 221059240598221045}
   - {fileID: 1206093788059389594}
-  - {fileID: 80813688569349285}
-  - {fileID: 7773731180436977738}
-  - {fileID: 3154850538796121686}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -497,7 +404,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1d13ff4d32646d5b7849347c626766e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseTexture: {fileID: 2800000, guid: 55892647e93ffda43839ac517432380a, type: 3}
+  baseTexture: {fileID: 2800000, guid: 506a133c34cd1d347a94518317be52d7, type: 3}
   vessel: {fileID: 1418953858471844312}
   renderer: {fileID: 570129199169865884}
   dropRate: 0
@@ -505,58 +412,13 @@ MonoBehaviour:
   newRowReload: 0
   threshold: 0.226
   _isLeftFirst: 1
-  oneStepSpawnGrainsCount: 4
+  oneStepSpawnGrainsCount: 8
   toolView: {fileID: 2632544059349357036}
   <MaterialHolder>k__BackingField:
     _uniqueMaterials: []
   OnSpawnStateChange:
     m_PersistentCalls:
       m_Calls: []
---- !u!1 &4945685500039739458
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3154850538796121686}
-  - component: {fileID: 4954120747308604256}
-  m_Layer: 0
-  m_Name: Particle Collider (2)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3154850538796121686
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4945685500039739458}
-  m_LocalRotation: {x: -0, y: -0, z: -0.53027314, w: 0.84782696}
-  m_LocalPosition: {x: -7.2, y: 18.9, z: 3.7366676}
-  m_LocalScale: {x: 35.522186, y: 12.018787, z: 37.0617}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4334998559187529132}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -64.048}
---- !u!65 &4954120747308604256
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4945685500039739458}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6282687196321772776
 GameObject:
   m_ObjectHideFlags: 0
@@ -762,7 +624,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.6
+      scalar: 10
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -869,7 +731,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.3372549, g: 0.73333335, b: 0.98823535, a: 1}
+      maxColor: {r: 1, g: 0.85490197, b: 0.44705883, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -931,8 +793,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.8
-      minScalar: 0.4
+      scalar: 5
+      minScalar: 5
       maxCurve:
         serializedVersion: 2
         m_Curve:

@@ -1,5 +1,6 @@
 ﻿using Code.InitDatas;
 using Plugins.SimpleFactory;
+using TMPro;
 using UnityEngine;
 
 namespace Code.Levels
@@ -13,7 +14,8 @@ namespace Code.Levels
         private Grid _grid;
 
         public Transform Holder => holder;
-
+        public float GrainSize => _grid.cellSize.x;
+            
         public void Initialize(ResultRendererInitData initData)
         {
             _grid = GetComponent<Grid>();
@@ -21,6 +23,7 @@ namespace Code.Levels
             camera.Initialize(new CameraControllerInitData()
             {
                 Size = initData.Size,
+                GrainSize = _grid.cellSize.x,
             });
         }
 

@@ -40,6 +40,7 @@ namespace Code.Levels
             _size = initData.Size;
             spawnPointView.transform.position = pointA.position;
             sandPS.gameObject.SetActive(false);
+           
             initData.OnSpawnStateChange.AddListener((isSpawn) => {sandPS.gameObject.SetActive(isSpawn);});
             
             var distance = Vector3.Distance(pointA.position, pointB.position);
@@ -58,7 +59,7 @@ namespace Code.Levels
                 });
                 
                 grain.gameObject.SetActive(false);
-                grain.transform.SetParent(grainsHolder);
+                grain.transform.SetParent(_renderer.Holder);
                 _grains[cell.Position.x, cell.Position.y] = grain;
             }
         }
@@ -71,7 +72,7 @@ namespace Code.Levels
             
             pos =  sandPS.transform.position;
             pos.x = _renderer.GetPosition(position).x;
-            pos.y = _renderer.GetPosition(Vector2Int.up * 150).y;
+            pos.y = _renderer.GetPosition(Vector2Int.up * _size.y * 2).y;
             sandPS.transform.DOMove(pos,time);
         }
         
@@ -82,15 +83,7 @@ namespace Code.Levels
 
             sandPS.startColor = material.Color;
             
-            //spawnPointView.position = pointA.position + Vector3.left * ( _size.x - cell.Position.x) * _step;
-
-            /*var sposition = spawnPointView.position;
-            sposition.x = _renderer.GetPosition(cell.Position).x;
-            sposition.y = _renderer.GetPosition(Vector2Int.up * 150).y;*/
-
-
             var grain = _grains[cell.Position.x, cell.Position.y];
-            /*grain.transform.position = sposition;*/
             grain.SetMaterial(material);
             grain.gameObject.SetActive(true);
             grain.GoToPlace();

@@ -48,7 +48,7 @@ namespace Code.Levels
             transform.DOMove(_endPosition, _timeToMove)
                 .OnComplete(() =>
                 {
-                    transform.SetParent(_renderParent);
+                    //transform.SetParent(_renderParent);
                     transform.position = _renderPosition;
                     trailRenderer.enabled = false;
                 });
