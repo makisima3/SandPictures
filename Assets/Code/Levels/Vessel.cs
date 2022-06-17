@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Code.InitDatas;
 using DG.Tweening;
 using Plugins.SimpleFactory;
@@ -19,7 +20,7 @@ namespace Code.Levels
         [SerializeField] private Transform pointA;
         [SerializeField] private Transform pointB;
         [SerializeField] private ParticleSystem sandPS;
-        
+
         private ResultRenderer _renderer;
         private Grid _grid;
 
@@ -30,8 +31,12 @@ namespace Code.Levels
 
         private float _step;
 
+        private Dictionary<int, MeshCombiner> combiners;
+
         public void Initialize(VesselInitData initData)
         {
+            combiners = new Dictionary<int, MeshCombiner>();
+
             _grid = GetComponent<Grid>();
             _grains = new Grain[initData.Size.x, initData.Size.y];
             _dropGrainTime = initData.DropGrainTime;
@@ -40,15 +45,45 @@ namespace Code.Levels
             _size = initData.Size;
             spawnPointView.transform.position = pointA.position;
             sandPS.gameObject.SetActive(false);
-           
-            initData.OnSpawnStateChange.AddListener((isSpawn) => {sandPS.gameObject.SetActive(isSpawn);});
-            
+
+            initData.OnSpawnStateChange.AddListener((isSpawn) => { sandPS.gameObject.SetActive(isSpawn); });
+
             var distance = Vector3.Distance(pointA.position, pointB.position);
             _step = distance / initData.Size.x;
 
-            foreach (var cell in initData.Cells)
+            var zones = initData.Cells
+                .Cast<Cell>()
+                .GroupBy(c => c.Color)
+                .OrderBy(z => z.Sum(c => c.Position.y) / z.Count());
+
+            int counter = 0;
+            foreach (var zone in zones)
             {
-               var grain = _worldFactory.Create<Grain, GrainInitData>(new GrainInitData()
+                var combiner = CreateNewCombiner();
+                combiners.Add(counter,combiner);
+                foreach (var cell in zone)
+                {
+                    var grain = _worldFactory.Create<Grain, GrainInitData>(new GrainInitData()
+                    {
+                        EndPosition = _renderer.GetPosition(cell.Position),
+                        //SpawnPosition = Vector3.one * 1000,
+                        SpawnPosition = _renderer.GetPosition(cell.Position),
+                        TimeToMove = _dropGrainTime,
+                        RenderParent = _renderer.Holder,
+                        RenderPosition = _renderer.GetPosition(cell.Position),
+                    });
+
+                    grain.gameObject.SetActive(false);
+                    grain.transform.SetParent(combiner.transform);
+                    _grains[cell.Position.x, cell.Position.y] = grain;
+                }
+
+                counter++;
+            }
+
+            /*foreach (var cell in initData.Cells)
+            {
+                var grain = _worldFactory.Create<Grain, GrainInitData>(new GrainInitData()
                 {
                     EndPosition = _renderer.GetPosition(cell.Position),
                     //SpawnPosition = Vector3.one * 1000,
@@ -57,32 +92,49 @@ namespace Code.Levels
                     RenderParent = _renderer.Holder,
                     RenderPosition = _renderer.GetPosition(cell.Position),
                 });
-                
+
                 grain.gameObject.SetActive(false);
                 grain.transform.SetParent(_renderer.Holder);
                 _grains[cell.Position.x, cell.Position.y] = grain;
-            }
+            }*/
+        }
+
+        private MeshCombiner CreateNewCombiner()
+        {
+            var newHodler = new GameObject();
+            newHodler.transform.SetParent(_renderer.Holder);
+            newHodler.transform.position = Vector3.zero;
+            var combiner = newHodler.AddComponent<MeshCombiner>();
+            combiner.CreateMultiMaterialMesh = true;
+            combiner.DeactivateCombinedChildren = true;
+            
+            return combiner;
+        }
+
+        public void CombineGroup(int index)
+        {
+            combiners[index].CombineMeshes(false);
         }
 
         public void Move(Vector2Int position, float time)
         {
             var pos = spawnPointView.position;
             pos.x = (pointB.position + Vector3.right * (_step * position.x)).x;
-            spawnPointView.DOMove(pos,time);
-            
-            pos =  sandPS.transform.position;
+            spawnPointView.DOMove(pos, time);
+
+            pos = sandPS.transform.position;
             pos.x = _renderer.GetPosition(position).x;
             pos.y = _renderer.GetPosition(Vector2Int.up * _size.y * 2).y;
-            sandPS.transform.DOMove(pos,time);
+            sandPS.transform.DOMove(pos, time);
         }
-        
-        public void SpawnGrain(Cell cell, MaterialHolder.UniqueMaterial material,float time)
+
+        public void SpawnGrain(Cell cell, MaterialHolder.UniqueMaterial material, float time)
         {
             SoundManager.Instance.PlaySound();
             Move(cell.Position, time);
 
             sandPS.startColor = material.Color;
-            
+
             var grain = _grains[cell.Position.x, cell.Position.y];
             grain.SetMaterial(material);
             grain.gameObject.SetActive(true);
@@ -111,7 +163,7 @@ namespace Code.Levels
         }
 
         private Cell[,] _cells;
-        
+
         public float CompareResultV2(Cell[,] cells)
         {
             _cells = cells;
@@ -136,7 +188,7 @@ namespace Code.Levels
         {
             Debug.Log(CompareResultV2(_cells));
         }
-        
+
         public float Remap(float value, float fromLower, float fromUpper, float toLower, float toUpper)
         {
             return (toUpper - toLower) * ((value - fromLower) / (fromUpper - fromLower)) + toLower;

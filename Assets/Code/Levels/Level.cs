@@ -316,6 +316,9 @@ namespace Code.Levels
                 if (t)
                 {
                     _isSpawn = false;
+                    
+                    vessel.CombineGroup(currentZoneIndex);
+                    
                     currentZoneIndex += 1;
 
                     if (_cells.Cast<Cell>().All(c => c.IsSpawned))
