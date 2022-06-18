@@ -15,5 +15,6 @@ namespace Code.InitDatas
         public float newRowDelay { get; set; }
         public UnityEvent<bool> OnSpawnStateChange { get; set; }
         public Cell[,] Cells { get; set; }
+        public List<List<Cell>> SplitedZones { get; set; }
     }
 }

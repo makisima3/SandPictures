@@ -6,7 +6,6 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
-using ToonyColorsPro.Utilities;
 
 internal class TCP2_MaterialInspector_PBS : ShaderGUI
 {

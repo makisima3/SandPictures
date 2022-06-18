@@ -4,7 +4,6 @@
 //Enable this to display the default Inspector (in case the custom Inspector is broken)
 //#define SHOW_DEFAULT_INSPECTOR
 
-using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;

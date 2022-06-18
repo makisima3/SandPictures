@@ -1,5 +1,4 @@
-﻿using System.Net.NetworkInformation;
-using Code.InitDatas;
+﻿using Code.InitDatas;
 using Code.StoragesObjects;
 using DG.Tweening;
 using Plugins.SimpleFactory;

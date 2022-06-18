@@ -1,6 +1,4 @@
-﻿using Code.Levels;
-
-namespace Code.InitDatas
+﻿namespace Code.InitDatas
 {
     public class LevelCompleteInitData
     {

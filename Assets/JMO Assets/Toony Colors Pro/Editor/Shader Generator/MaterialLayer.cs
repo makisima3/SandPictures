@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.IMGUI.Controls;
 using UnityEngine;
-using UnityEngine.Scripting;
 using Random = UnityEngine.Random;
 
 namespace ToonyColorsPro

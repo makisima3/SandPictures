@@ -477,17 +477,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1d13ff4d32646d5b7849347c626766e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseTexture: {fileID: 2800000, guid: 506a133c34cd1d347a94518317be52d7, type: 3}
+  baseTexture: {fileID: 2800000, guid: 9f984f68a56858d488132665aa69c361, type: 3}
   vessel: {fileID: 1418953858471844312}
   renderer: {fileID: 570129199169865884}
-  dropRate: 0
+  dropRate: 0.2
   dropGrainTime: 0.1
   newRowReload: 0
   threshold: 0.226
   _isLeftFirst: 1
-  oneStepSpawnGrainsCount: 14
+  oneStepSpawnGrainsCount: 15
   toolView: {fileID: 2632544059349357036}
-  meshCombiner: {fileID: 7054351055322032455}
+  maxZoneLength: 5000
   <MaterialHolder>k__BackingField:
     _uniqueMaterials: []
   OnSpawnStateChange:
@@ -5916,12 +5916,28 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7526270768739186425, guid: d00a138b0e4f46747a60867274260551, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.87626
+      objectReference: {fileID: 0}
+    - target: {fileID: 7526270768739186425, guid: d00a138b0e4f46747a60867274260551, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.87626
+      objectReference: {fileID: 0}
+    - target: {fileID: 7526270768739186425, guid: d00a138b0e4f46747a60867274260551, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.87626
+      objectReference: {fileID: 0}
+    - target: {fileID: 7526270768739186425, guid: d00a138b0e4f46747a60867274260551, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 3.9
       objectReference: {fileID: 0}
     - target: {fileID: 7526270768739186425, guid: d00a138b0e4f46747a60867274260551, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7526270768739186425, guid: d00a138b0e4f46747a60867274260551, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 5.6
       objectReference: {fileID: 0}
     - target: {fileID: 7526270768739186426, guid: d00a138b0e4f46747a60867274260551, type: 3}
       propertyPath: sandPS

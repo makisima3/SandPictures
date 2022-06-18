@@ -1,5 +1,4 @@
-﻿using System;
-using Code.InitDatas;
+﻿using Code.InitDatas;
 using Plugins.SimpleFactory;
 using UnityEngine;
 

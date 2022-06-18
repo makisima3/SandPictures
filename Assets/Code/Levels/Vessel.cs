@@ -20,6 +20,7 @@ namespace Code.Levels
         [SerializeField] private Transform pointA;
         [SerializeField] private Transform pointB;
         [SerializeField] private ParticleSystem sandPS;
+       
 
         private ResultRenderer _renderer;
         private Grid _grid;
@@ -28,9 +29,10 @@ namespace Code.Levels
         private SimpleFactory _worldFactory;
         private Grain[,] _grains;
         private Vector2Int _size;
-
+        private List<List<Cell>> _splitedZones;
         private float _step;
-
+        
+        private IOrderedEnumerable<IGrouping<Color, Cell>> _zones;
         private Dictionary<int, MeshCombiner> combiners;
 
         public void Initialize(VesselInitData initData)
@@ -43,6 +45,8 @@ namespace Code.Levels
             _worldFactory = initData.WorldFactory;
             _renderer = initData.ResultRenderer;
             _size = initData.Size;
+            _splitedZones = initData.SplitedZones;
+            
             spawnPointView.transform.position = pointA.position;
             sandPS.gameObject.SetActive(false);
 
@@ -51,13 +55,8 @@ namespace Code.Levels
             var distance = Vector3.Distance(pointA.position, pointB.position);
             _step = distance / initData.Size.x;
 
-            var zones = initData.Cells
-                .Cast<Cell>()
-                .GroupBy(c => c.Color)
-                .OrderBy(z => z.Sum(c => c.Position.y) / z.Count());
-
             int counter = 0;
-            foreach (var zone in zones)
+            foreach (var zone in _splitedZones)
             {
                 var combiner = CreateNewCombiner();
                 combiners.Add(counter,combiner);
@@ -106,7 +105,7 @@ namespace Code.Levels
             newHodler.transform.position = Vector3.zero;
             var combiner = newHodler.AddComponent<MeshCombiner>();
             combiner.CreateMultiMaterialMesh = true;
-            combiner.DeactivateCombinedChildren = true;
+            combiner.DeactivateCombinedChildrenMeshRenderers = true;
             
             return combiner;
         }

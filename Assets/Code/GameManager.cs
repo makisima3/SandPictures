@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Code.Factories;
 using Code.InitDatas;
 using Code.Levels;
 using Code.StoragesObjects;
 using Code.UI;
-using Plugins.SimpleFactory;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +19,8 @@ namespace Code
         [SerializeField] private ColorsSelector colorsSelector;
         [SerializeField] private Material grainBaseMaterial;
         [SerializeField] private LevelCompleteView levelCompleteView;
+        [SerializeField] private TutorialView tutorialView;
+        
         private LevelStorageObject _levelStorageObject;
 
         private void Awake()
@@ -49,6 +48,13 @@ namespace Code
             });
 
             _inputCatcher.Initialize(new InputCatcherInitData() {Level = level});
+
+            tutorialView.Initialize(new LevelCompleteInitData());
+            
+            if (_levelStorageObject.Data.Level == 0)
+            {
+                tutorialView.Show();
+            }
         }
 
         private Level LoadLevel()

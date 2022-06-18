@@ -1,6 +1,5 @@
 ﻿using Code.Levels;
 using Plugins.SimpleFactory;
-using UnityEngine;
 
 namespace Code.InitDatas
 {

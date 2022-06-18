@@ -1,5 +1,4 @@
 ﻿using Plugins.SimpleFactory;
-using UnityEngine;
 
 namespace Code.Factories
 {
