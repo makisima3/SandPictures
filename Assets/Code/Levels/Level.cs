@@ -21,7 +21,7 @@ namespace Code.Levels
 
         [SerializeField] private Texture2D baseTexture;
         [SerializeField] private Vessel vessel;
-        [SerializeField] private ResultRenderer renderer;
+        
         [SerializeField] private float dropRate = 0.5f;
         [SerializeField] private float dropGrainTime;
         [SerializeField] private float newRowReload = 1f;
@@ -30,46 +30,35 @@ namespace Code.Levels
         [SerializeField] private int oneStepSpawnGrainsCount = 2;
         [SerializeField] private ToolView toolView;
         [SerializeField] private int maxZoneLength = 5000;
+        [SerializeField] private MeshRenderer resultMeshRenderer;
 
 
         private Coroutine spawnCoroutine;
         private Cell[,] _cells;
         private List<Color> _uniqueColors;
-        private Texture2D _resultTexture;
+        private Texture2D _resultTargetTexture;
+        private Texture2D _resultColbasTexture;
         private MaterialHolder.UniqueMaterial _currentMaterial;
         private bool _isSpawn;
         private bool _isEnded;
-        private int x;
-        private int y;
         private LevelCompleteView _levelCompleteView;
         private IOrderedEnumerable<IGrouping<Color, Cell>> _zones;
         private int currentZoneIndex = 0;
         private Image _targetImage;
-        private List<List<Cell>> _splitedZones;
-        private List<SplitedZone> _sSplitedZones;
         [field: SerializeField] public MaterialHolder MaterialHolder { get; private set; }
         public UnityEvent<bool> OnSpawnStateChange;
         public Vector2Int Size => new Vector2Int(_cells.GetLength(0), _cells.GetLength(1));
 
         public void Initialize(LevelInitData initData)
         {
-            //_cells = ImageConverter.GetCells(baseTexture);
             MaterialHolder = new MaterialHolder();
             _levelCompleteView = initData.LevelCompleteView;
             _targetImage = initData.TargetImage;
-            _splitedZones = new List<List<Cell>>();
-            _sSplitedZones = new List<SplitedZone>();
+
             GetCells(baseTexture);
-
             _targetImage.sprite = Sprite
-                .Create(_resultTexture, new Rect(0f, 0f, _resultTexture.width, _resultTexture.height), Vector2.one / 2);
-
-            //var filteredCells = FilterCells();
-            // _uniqueColors = GetUniqueColors(filteredCells);
-
-
-            /* initData.TargetImage.sprite =
-                 Sprite.Create(_resultTexture, new Rect(0f, 0f, _resultTexture.width, _resultTexture.height), Vector2.one / 2);*/
+                .Create(_resultTargetTexture, new Rect(0f, 0f, _resultTargetTexture.width, _resultTargetTexture.height),
+                    Vector2.one / 2);
 
             int id = 0;
             foreach (var color in _uniqueColors)
@@ -83,32 +72,14 @@ namespace Code.Levels
                 id++;
             }
 
-            x = _cells.GetLength(0) - 1;
-            y = 0;
-
-            renderer.Initialize(new ResultRendererInitData()
-            {
-                Size = Size,
-            });
-
-            _zones = _cells
-                .Cast<Cell>()
-                .GroupBy(c => c.Color)
-                .OrderBy(z => z.Sum(c => c.Position.y) / z.Count());
-
-            foreach (var zone in _zones)
-            {
-                SplitZone(zone);
-            }
+           
 
             vessel.Initialize(new VesselInitData()
             {
                 WorldFactory = initData.WorldFactory,
                 DropGrainTime = dropGrainTime,
                 Size = new Vector2Int(_cells.GetLength(0), _cells.GetLength(1)),
-                ResultRenderer = renderer,
                 Cells = _cells,
-                SplitedZones = _splitedZones,
                 OnSpawnStateChange = OnSpawnStateChange
             });
 
@@ -117,6 +88,11 @@ namespace Code.Levels
                 Colors = _uniqueColors.ToList(),
                 firstColor = _uniqueColors.First()
             });
+            
+            _zones = _cells
+                .Cast<Cell>()
+                .GroupBy(c => c.Color)
+                .OrderBy(z => z.Sum(c => c.Position.y) / z.Count());
         }
 
         public void StartSpawn()
@@ -126,7 +102,7 @@ namespace Code.Levels
 
             _isSpawn = true;
             OnSpawnStateChange.Invoke(_isSpawn);
-            spawnCoroutine = StartCoroutine(SpawnV3());
+            spawnCoroutine = StartCoroutine(SpawnV5());
         }
 
         public void StopSpawn()
@@ -148,103 +124,27 @@ namespace Code.Levels
 
         private int _zoneCounter;
 
-        private void SplitZone(IGrouping<Color, Cell> zone)
-        {
-            var splitedZone = new SplitedZone()
-            {
-                Index = _zoneCounter,
-                Zones = new List<List<Cell>>(),
-            };
-
-
-            if (zone.Count() <= maxZoneLength)
-            {
-                _splitedZones.Add(zone.ToList());
-                splitedZone.Zones.Add(zone.ToList());
-                return;
-            }
-
-            for (int i = 0; i < zone.Count() / maxZoneLength + 1; i++)
-            {
-                var a = zone
-                    .GroupBy(c => c.Position.y)
-                    .OrderBy(z => z.Key)
-                    .SelectMany(a => a)
-                    //.OrderBy(c => c.Position.x)
-                    .Skip(i * maxZoneLength)
-                    .Take(maxZoneLength);
-
-                if (a.Any())
-                {
-                    _splitedZones.Add(a.ToList());
-                    splitedZone.Zones.Add(a.ToList());
-                }
-            }
-
-            _sSplitedZones.Add(splitedZone);
-
-            _zoneCounter++;
-        }
-
-        private HashSet<Color> GetUniqueColors(Cell[] cells) => cells.Select(c => c.Color).ToHashSet();
-
-        private Texture2D GetTexture(Cell[] cells, Texture2D baseTex)
-        {
-            var texture = new Texture2D(baseTex.width, baseTex.height, TextureFormat.ARGB32, true)
-            {
-                filterMode = FilterMode.Point
-            };
-
-            foreach (var cell in cells)
-            {
-                texture.SetPixel(cell.Position.x, cell.Position.y, cell.Color);
-            }
-
-            texture.Apply();
-            return texture;
-        }
-
-        private Cell[] FilterCells()
-        {
-            var cells = _cells.Cast<Cell>().ToArray();
-
-            for (int i = 0; i < cells.Length; i++)
-            {
-                var cell1 = cells[i];
-
-                for (int j = i; j < cells.Length; j++)
-                {
-                    var cell2 = cells[j];
-
-                    if (cell1.Color.ToVector4().DistanceTo(cell2.Color.ToVector4()) < threshold)
-                    {
-                        cell2.Color = cell1.Color;
-                    }
-                }
-            }
-
-            foreach (var cell in _cells)
-            {
-                var ca = cells.First(c => c.Position == cell.Position);
-                cell.Color = ca.Color;
-            }
-
-            return cells;
-        }
-
         private void GetCells(Texture2D baseTex)
         {
-            _resultTexture = new Texture2D(baseTex.width, baseTex.height, TextureFormat.ARGB32, true)
+            _resultTargetTexture = new Texture2D(baseTex.width, baseTex.height, TextureFormat.ARGB32, true)
             {
                 filterMode = FilterMode.Point
             };
-
-            _cells = new Cell[_resultTexture.width, _resultTexture.height];
+            _resultColbasTexture = new Texture2D(baseTex.width, baseTex.height * 2, TextureFormat.ARGB32, true)
+            {
+                filterMode = FilterMode.Point
+            };
+            _resultColbasTexture.SetPixels(0,0,_resultColbasTexture.width,_resultColbasTexture.height,Enumerable.Repeat(
+                new Color(0,0,0,0),_resultColbasTexture.width * _resultColbasTexture.height).ToArray());
+            _resultColbasTexture.Apply();
+            
+            resultMeshRenderer.sharedMaterial.mainTexture = _resultColbasTexture;
+            _cells = new Cell[_resultTargetTexture.width, _resultTargetTexture.height];
             _uniqueColors = new List<Color>();
 
-            for (int x = 0; x < _resultTexture.width; x++)
+            for (int x = 0; x < _resultTargetTexture.width; x++)
             {
-                for (int y = 0; y < _resultTexture.height; y++)
+                for (int y = 0; y < _resultTargetTexture.height; y++)
                 {
                     var color = baseTex.GetPixel(x, y);
 
@@ -265,11 +165,11 @@ namespace Code.Levels
                         Color = color
                     };
 
-                    _resultTexture.SetPixel(x, y, color);
+                    _resultTargetTexture.SetPixel(x, y, color);
                 }
             }
 
-            _resultTexture.Apply();
+            _resultTargetTexture.Apply();
         }
 
         private bool CheckThreshold(Color color1, Color color2)
@@ -290,89 +190,12 @@ namespace Code.Levels
             return _cells[position.x, position.y];
         }
 
-        private IEnumerator Spawn()
+        private IEnumerator SpawnV5()
         {
-            while (_isSpawn)
-            {
-                for (int i = x; i >= 0 && i < _cells.GetLength(0); i += step)
-                {
-                    vessel.SpawnGrain(_cells[i, y], _currentMaterial, dropRate);
-
-                    x += step;
-                    yield return new WaitForSeconds(dropRate);
-                }
-
-                step *= -1;
-
-                x = step > 0 ? 0 : _cells.GetLength(0) - 1;
-                y++;
-
-                if (y >= _cells.GetLength(1))
-                {
-                    _isEnded = true;
-
-                    var percetn = vessel.CompareResultV2(_cells);
-                    _levelCompleteView.Show(percetn);
-
-                    yield break;
-                }
-
-                yield return new WaitForSeconds(newRowReload);
-            }
-        }
-
-        private IEnumerator SpawnV2()
-        {
-            while (_isSpawn)
-            {
-                var cells = _cells
-                    .Cast<Cell>()
-                    .Where(c => c.Color == _currentMaterial.Color && !c.IsSpawned)
-                    .GroupBy(c => c.Position.y)
-                    .OrderBy(c => c.Key);
-
-                if (!cells.Any())
-                {
-                    _isSpawn = false;
-                    break;
-                }
-
-                foreach (var cellGroup in cells)
-                {
-                    vessel.Move(cellGroup.First().Position, newRowReload);
-                    yield return new WaitForSeconds(newRowReload);
-
-                    foreach (var cell in cellGroup.OrderBy(c => c.Position.x))
-                    {
-                        if (!_isSpawn)
-                            break;
-
-                        vessel.SpawnGrain(cell, _currentMaterial, dropRate);
-                        cell.IsSpawned = true;
-                        yield return new WaitForSeconds(dropRate);
-                    }
-                }
-
-                if (_cells.Cast<Cell>().All(c => c.IsSpawned))
-                {
-                    _isEnded = true;
-
-                    var percetn = vessel.CompareResultV2(_cells);
-                    _levelCompleteView.Show(percetn);
-
-                    yield break;
-                }
-            }
-        }
-
-
-        private IEnumerator SpawnV3()
-        {
-            var isSecRow = false;
             while (_isSpawn)
             {
                 var t = true;
-                foreach (var cellGroup in _splitedZones.Skip(currentZoneIndex).First().GroupBy(c => c.Position.y))
+                foreach (var cellGroup in _zones.Skip(currentZoneIndex).First().GroupBy(c => c.Position.y))
                 {
                     if (cellGroup.All(c => c.IsSpawned))
                         continue;
@@ -382,8 +205,6 @@ namespace Code.Levels
 
                 if (t)
                 {
-                    vessel.CombineGroup(currentZoneIndex);
-
                     currentZoneIndex += 1;
 
                     if (_cells.Cast<Cell>().All(c => c.IsSpawned))
@@ -395,42 +216,22 @@ namespace Code.Levels
                         _isSpawn = false;
                         yield break;
                     }
-
-                    if (_splitedZones.Skip(currentZoneIndex).First().First().Color !=
-                        _splitedZones.Skip(currentZoneIndex - 1).First().First().Color)
+                    
+                    if (_zones.Skip(currentZoneIndex).First().First().Color !=
+                        _zones.Skip(currentZoneIndex - 1).First().First().Color)
                     {
                         _isSpawn = false;
-                        isSecRow = false;
                         break;
                     }
                 }
 
 
-                foreach (var cellGroup in _splitedZones.Skip(currentZoneIndex).First().Where(c => !c.IsSpawned)
+                foreach (var cellGroup in _zones.Skip(currentZoneIndex).First().Where(c => !c.IsSpawned)
                     .GroupBy(c => c.Position.y).OrderBy(c => c.Key))
                 {
-                    var isSpawnSecRow = false;
-                    if (!cellGroup.All(c => c.IsSpawned))
-                    {
-                        isSecRow = false;
-
-                        isSpawnSecRow = !cellGroup.Any(c => c.IsSpawned);
-                    }
-                    else
-                    {
+                    if(cellGroup.All(c => c.IsSpawned))
                         continue;
-                    }
                     
-                    if (isSecRow)
-                    {
-                        isSecRow = false;
-                        continue;
-                    }
-                    
-                    isSecRow = true;
-                    
-
-
                     var group = cellGroup.OrderBy(c => c.Position.x);
 
                     if (_isLeftFirst)
@@ -438,7 +239,7 @@ namespace Code.Levels
 
                     _isLeftFirst = !_isLeftFirst;
 
-                    vessel.Move(group.First().Position, newRowReload);
+                    vessel.Move(group.First().Position, newRowReload,_currentMaterial.Color);
                     yield return new WaitForSeconds(newRowReload);
 
                     var counter = oneStepSpawnGrainsCount;
@@ -446,95 +247,29 @@ namespace Code.Levels
                     {
                         if (!_isSpawn)
                             break;
-
-                        /*if(cell.IsSpawned)
-                            continue;*/
-
+                        
                         counter--;
 
-                        vessel.SpawnGrain(cell, _currentMaterial, dropRate);
+                        vessel.Move(cell.Position, dropRate,_currentMaterial.Color);
+                        _resultColbasTexture.SetPixel(cell.Position.x, cell.Position.y, _currentMaterial.Color);
+                        
                         cell.IsSpawned = true;
+                        
+                         var c = GetCell(cell.Position + Vector2Int.up);
+                         if (c != null && c.Color == cell.Color)
+                         {
+                             _resultColbasTexture.SetPixel(c.Position.x, c.Position.y, _currentMaterial.Color);
+                             c.IsSpawned = true;
+                         }
 
 
-                        var c = GetCell(cell.Position + Vector2Int.up);
-                        if (isSpawnSecRow && c != null && c.Color == cell.Color)
-                        {
-                            vessel.SpawnGrain(c, _currentMaterial, dropRate);
-                            c.IsSpawned = true;
-                        }
-
-
-                        if (counter >= 0) continue;
-
+                         if (counter >= 0) continue;
+                         
+                        _resultColbasTexture.Apply();
                         counter = oneStepSpawnGrainsCount;
+                        
                         yield return null;
                     }
-                }
-            }
-        }
-
-        private IEnumerator SpawnV4()
-        {
-            var currentZone = _sSplitedZones.FirstOrDefault(z => z.Index == currentZoneIndex);
-
-            if (currentZone == default)
-            {
-                _isEnded = true;
-
-                var percetn = vessel.CompareResultV2(_cells);
-                _levelCompleteView.Show(percetn);
-                yield break;
-            }
-
-            while (true)
-            {
-                var isZoneCompleted = currentZone.Zones.All(c => c.All(c => c.IsSpawned));
-
-                if (isZoneCompleted)
-                {
-                    _isSpawn = false;
-                    currentZoneIndex++;
-                }
-
-                var zoneCounter = 0;
-                foreach (var zone in currentZone.Zones)
-                {
-                    var group = zone.OrderBy(c => c.Position.x);
-
-                    if (_isLeftFirst)
-                        group = group.OrderByDescending(c => c.Position.x);
-
-                    _isLeftFirst = !_isLeftFirst;
-
-                    vessel.Move(group.First().Position, newRowReload);
-                    yield return new WaitForSeconds(newRowReload);
-
-                    var counter = oneStepSpawnGrainsCount;
-                    foreach (var cell in group)
-                    {
-                        if (!_isSpawn)
-                            break;
-
-
-                        counter--;
-
-                        vessel.SpawnGrain(cell, _currentMaterial, dropRate);
-                        cell.IsSpawned = true;
-
-                        if (counter >= 0) continue;
-
-                        counter = oneStepSpawnGrainsCount;
-                        yield return null;
-                    }
-
-                    var c = 0;
-                    for (int i = 0; i < currentZoneIndex; i++)
-                    {
-                        c += _sSplitedZones[i].Zones.Count() - 1;
-                    }
-
-                    vessel.CombineGroup(c + zoneCounter);
-                    zoneCounter++;
                 }
             }
         }
