@@ -316,10 +316,11 @@ MonoBehaviour:
   newRowReload: 0
   threshold: 0.226
   _isLeftFirst: 1
-  oneStepSpawnGrainsCount: 5
+  oneStepSpawnGrainsCount: 2
   toolView: {fileID: 2632544059349357036}
   maxZoneLength: 5000
   resultMeshRenderer: {fileID: 295673549230714913}
+  RowCount: 1
   <MaterialHolder>k__BackingField:
     _uniqueMaterials: []
   OnSpawnStateChange:

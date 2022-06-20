@@ -21,7 +21,7 @@ namespace Code.Levels
 
         [SerializeField] private Texture2D baseTexture;
         [SerializeField] private Vessel vessel;
-        
+
         [SerializeField] private float dropRate = 0.5f;
         [SerializeField] private float dropGrainTime;
         [SerializeField] private float newRowReload = 1f;
@@ -31,6 +31,7 @@ namespace Code.Levels
         [SerializeField] private ToolView toolView;
         [SerializeField] private int maxZoneLength = 5000;
         [SerializeField] private MeshRenderer resultMeshRenderer;
+        [SerializeField] private int RowCount = 3;
 
 
         private Coroutine spawnCoroutine;
@@ -72,7 +73,6 @@ namespace Code.Levels
                 id++;
             }
 
-           
 
             vessel.Initialize(new VesselInitData()
             {
@@ -88,7 +88,7 @@ namespace Code.Levels
                 Colors = _uniqueColors.ToList(),
                 firstColor = _uniqueColors.First()
             });
-            
+
             _zones = _cells
                 .Cast<Cell>()
                 .GroupBy(c => c.Color)
@@ -134,10 +134,11 @@ namespace Code.Levels
             {
                 filterMode = FilterMode.Point
             };
-            _resultColbasTexture.SetPixels(0,0,_resultColbasTexture.width,_resultColbasTexture.height,Enumerable.Repeat(
-                new Color(0,0,0,0),_resultColbasTexture.width * _resultColbasTexture.height).ToArray());
+            _resultColbasTexture.SetPixels(0, 0, _resultColbasTexture.width, _resultColbasTexture.height, Enumerable
+                .Repeat(
+                    new Color(0, 0, 0, 0), _resultColbasTexture.width * _resultColbasTexture.height).ToArray());
             _resultColbasTexture.Apply();
-            
+
             resultMeshRenderer.sharedMaterial.mainTexture = _resultColbasTexture;
             _cells = new Cell[_resultTargetTexture.width, _resultTargetTexture.height];
             _uniqueColors = new List<Color>();
@@ -194,20 +195,14 @@ namespace Code.Levels
         {
             while (_isSpawn)
             {
-                var t = true;
-                foreach (var cellGroup in _zones.Skip(currentZoneIndex).First().GroupBy(c => c.Position.y))
-                {
-                    if (cellGroup.All(c => c.IsSpawned))
-                        continue;
+                //Проверка закрашена ли зона
+                var isZoneCompleted = _zones.Skip(currentZoneIndex).First().All(c => c.IsSpawned);
 
-                    t = false;
-                }
-
-                if (t)
+                if (isZoneCompleted)
                 {
                     currentZoneIndex += 1;
 
-                    if (_cells.Cast<Cell>().All(c => c.IsSpawned))
+                    if (currentZoneIndex >= _zones.Count())
                     {
                         _isEnded = true;
 
@@ -216,7 +211,7 @@ namespace Code.Levels
                         _isSpawn = false;
                         yield break;
                     }
-                    
+
                     if (_zones.Skip(currentZoneIndex).First().First().Color !=
                         _zones.Skip(currentZoneIndex - 1).First().First().Color)
                     {
@@ -225,21 +220,27 @@ namespace Code.Levels
                     }
                 }
 
-
-                foreach (var cellGroup in _zones.Skip(currentZoneIndex).First().Where(c => !c.IsSpawned)
-                    .GroupBy(c => c.Position.y).OrderBy(c => c.Key))
+                foreach (var cellGroup in _zones
+                    .Skip(currentZoneIndex)
+                    .First()
+                    .GroupBy(c => c.Position.y)
+                    .OrderBy(c => c.Key))
                 {
-                    if(cellGroup.All(c => c.IsSpawned))
+                    if (cellGroup.All(c => c.IsSpawned))
+                    {
                         continue;
-                    
-                    var group = cellGroup.OrderBy(c => c.Position.x);
+                    }
+
+                    IOrderedEnumerable<Cell> group;
 
                     if (_isLeftFirst)
-                        group = group.OrderByDescending(c => c.Position.x);
+                        group = cellGroup.Where(c => !c.IsSpawned).OrderByDescending(c => c.Position.x);
+                    else
+                        group = cellGroup.Where(c => !c.IsSpawned).OrderBy(c => c.Position.x);
 
                     _isLeftFirst = !_isLeftFirst;
 
-                    vessel.Move(group.First().Position, newRowReload,_currentMaterial.Color);
+                    vessel.Move(group.First().Position, newRowReload, _currentMaterial.Color);
                     yield return new WaitForSeconds(newRowReload);
 
                     var counter = oneStepSpawnGrainsCount;
@@ -247,28 +248,31 @@ namespace Code.Levels
                     {
                         if (!_isSpawn)
                             break;
-                        
+
                         counter--;
 
-                        vessel.Move(cell.Position, dropRate,_currentMaterial.Color);
+                        vessel.Move(cell.Position, dropRate, _currentMaterial.Color);
                         _resultColbasTexture.SetPixel(cell.Position.x, cell.Position.y, _currentMaterial.Color);
-                        
+
                         cell.IsSpawned = true;
-                        
-                         var c = GetCell(cell.Position + Vector2Int.up);
-                         if (c != null && c.Color == cell.Color)
-                         {
-                             _resultColbasTexture.SetPixel(c.Position.x, c.Position.y, _currentMaterial.Color);
-                             c.IsSpawned = true;
-                         }
 
+                        for (int i = 1; i <= RowCount; i++)
+                        {
+                            var c = GetCell(cell.Position + Vector2Int.up * i);
+                            if (c != null && c.Color == cell.Color)
+                            {
+                                _resultColbasTexture.SetPixel(c.Position.x, c.Position.y, _currentMaterial.Color);
+                                c.IsSpawned = true;
+                            }
+                        }
 
-                         if (counter >= 0) continue;
-                         
+                        if (counter >= 0)
+                            continue;
+
                         _resultColbasTexture.Apply();
                         counter = oneStepSpawnGrainsCount;
-                        
-                        yield return null;
+
+                        yield return dropRate;
                     }
                 }
             }
