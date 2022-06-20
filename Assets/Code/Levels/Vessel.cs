@@ -119,12 +119,12 @@ namespace Code.Levels
         {
             var pos = spawnPointView.position;
             pos.x = (pointB.position + Vector3.right * (_step * position.x)).x;
-            spawnPointView.DOMove(pos, time);
+            spawnPointView.DOMove(pos, time).SetEase(Ease.Linear);
 
             pos = sandPS.transform.position;
             pos.x = _renderer.GetPosition(position).x;
             pos.y = _renderer.GetPosition(Vector2Int.up * _size.y * 2).y;
-            sandPS.transform.DOMove(pos, time);
+            sandPS.transform.DOMove(pos, time).SetEase(Ease.Linear);
         }
 
         public void SpawnGrain(Cell cell, MaterialHolder.UniqueMaterial material, float time)

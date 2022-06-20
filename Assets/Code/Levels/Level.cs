@@ -18,7 +18,7 @@ namespace Code.Levels
             public int Index { get; set; }
             public List<List<Cell>> Zones { get; set; }
         }
-        
+
         [SerializeField] private Texture2D baseTexture;
         [SerializeField] private Vessel vessel;
         [SerializeField] private ResultRenderer renderer;
@@ -30,8 +30,8 @@ namespace Code.Levels
         [SerializeField] private int oneStepSpawnGrainsCount = 2;
         [SerializeField] private ToolView toolView;
         [SerializeField] private int maxZoneLength = 5000;
-        
-        
+
+
         private Coroutine spawnCoroutine;
         private Cell[,] _cells;
         private List<Color> _uniqueColors;
@@ -100,7 +100,7 @@ namespace Code.Levels
             {
                 SplitZone(zone);
             }
-            
+
             vessel.Initialize(new VesselInitData()
             {
                 WorldFactory = initData.WorldFactory,
@@ -117,8 +117,6 @@ namespace Code.Levels
                 Colors = _uniqueColors.ToList(),
                 firstColor = _uniqueColors.First()
             });
-
-           
         }
 
         public void StartSpawn()
@@ -149,7 +147,7 @@ namespace Code.Levels
         }
 
         private int _zoneCounter;
-        
+
         private void SplitZone(IGrouping<Color, Cell> zone)
         {
             var splitedZone = new SplitedZone()
@@ -157,8 +155,8 @@ namespace Code.Levels
                 Index = _zoneCounter,
                 Zones = new List<List<Cell>>(),
             };
-            
-            
+
+
             if (zone.Count() <= maxZoneLength)
             {
                 _splitedZones.Add(zone.ToList());
@@ -184,7 +182,7 @@ namespace Code.Levels
             }
 
             _sSplitedZones.Add(splitedZone);
-            
+
             _zoneCounter++;
         }
 
@@ -281,6 +279,17 @@ namespace Code.Levels
 
         private int step = -1;
 
+        private Cell GetCell(Vector2Int position)
+        {
+            if (position.x < 0 || position.x >= _cells.GetLength(0))
+                return null;
+
+            if (position.y < 0 || position.y >= _cells.GetLength(1))
+                return null;
+
+            return _cells[position.x, position.y];
+        }
+
         private IEnumerator Spawn()
         {
             while (_isSpawn)
@@ -359,6 +368,7 @@ namespace Code.Levels
 
         private IEnumerator SpawnV3()
         {
+            var isSecRow = false;
             while (_isSpawn)
             {
                 var t = true;
@@ -372,8 +382,6 @@ namespace Code.Levels
 
                 if (t)
                 {
-                    
-
                     vessel.CombineGroup(currentZoneIndex);
 
                     currentZoneIndex += 1;
@@ -392,13 +400,37 @@ namespace Code.Levels
                         _splitedZones.Skip(currentZoneIndex - 1).First().First().Color)
                     {
                         _isSpawn = false;
+                        isSecRow = false;
                         break;
                     }
                 }
 
+
                 foreach (var cellGroup in _splitedZones.Skip(currentZoneIndex).First().Where(c => !c.IsSpawned)
                     .GroupBy(c => c.Position.y).OrderBy(c => c.Key))
                 {
+                    var isSpawnSecRow = false;
+                    if (!cellGroup.All(c => c.IsSpawned))
+                    {
+                        isSecRow = false;
+
+                        isSpawnSecRow = !cellGroup.Any(c => c.IsSpawned);
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                    
+                    if (isSecRow)
+                    {
+                        isSecRow = false;
+                        continue;
+                    }
+                    
+                    isSecRow = true;
+                    
+
+
                     var group = cellGroup.OrderBy(c => c.Position.x);
 
                     if (_isLeftFirst)
@@ -409,17 +441,28 @@ namespace Code.Levels
                     vessel.Move(group.First().Position, newRowReload);
                     yield return new WaitForSeconds(newRowReload);
 
-
                     var counter = oneStepSpawnGrainsCount;
                     foreach (var cell in group)
                     {
                         if (!_isSpawn)
                             break;
 
+                        /*if(cell.IsSpawned)
+                            continue;*/
+
                         counter--;
 
                         vessel.SpawnGrain(cell, _currentMaterial, dropRate);
                         cell.IsSpawned = true;
+
+
+                        var c = GetCell(cell.Position + Vector2Int.up);
+                        if (isSpawnSecRow && c != null && c.Color == cell.Color)
+                        {
+                            vessel.SpawnGrain(c, _currentMaterial, dropRate);
+                            c.IsSpawned = true;
+                        }
+
 
                         if (counter >= 0) continue;
 
@@ -442,7 +485,7 @@ namespace Code.Levels
                 _levelCompleteView.Show(percetn);
                 yield break;
             }
-            
+
             while (true)
             {
                 var isZoneCompleted = currentZone.Zones.All(c => c.All(c => c.IsSpawned));
@@ -465,14 +508,14 @@ namespace Code.Levels
 
                     vessel.Move(group.First().Position, newRowReload);
                     yield return new WaitForSeconds(newRowReload);
-                    
+
                     var counter = oneStepSpawnGrainsCount;
                     foreach (var cell in group)
                     {
                         if (!_isSpawn)
                             break;
-                        
-                       
+
+
                         counter--;
 
                         vessel.SpawnGrain(cell, _currentMaterial, dropRate);
@@ -489,7 +532,7 @@ namespace Code.Levels
                     {
                         c += _sSplitedZones[i].Zones.Count() - 1;
                     }
-                    
+
                     vessel.CombineGroup(c + zoneCounter);
                     zoneCounter++;
                 }
