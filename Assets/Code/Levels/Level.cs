@@ -220,25 +220,29 @@ namespace Code.Levels
                     }
                 }
 
-                foreach (var cellGroup in _zones
+                foreach (var rowCellGroup in _zones
                     .Skip(currentZoneIndex)
                     .First()
                     .GroupBy(c => c.Position.y)
                     .OrderBy(c => c.Key))
                 {
-                    if (cellGroup.All(c => c.IsSpawned))
+                    if (rowCellGroup.All(c => c.IsSpawned))
                     {
                         continue;
                     }
 
+                    bool isHasSpawned = rowCellGroup.Any(c => c.IsSpawned);
+
                     IOrderedEnumerable<Cell> group;
 
+                    if(!isHasSpawned)
+                        _isLeftFirst = !_isLeftFirst;
+                    
                     if (_isLeftFirst)
-                        group = cellGroup.Where(c => !c.IsSpawned).OrderByDescending(c => c.Position.x);
+                        group = rowCellGroup.Where(c => !c.IsSpawned).OrderByDescending(c => c.Position.x);
                     else
-                        group = cellGroup.Where(c => !c.IsSpawned).OrderBy(c => c.Position.x);
-
-                    _isLeftFirst = !_isLeftFirst;
+                        group = rowCellGroup.Where(c => !c.IsSpawned).OrderBy(c => c.Position.x);
+                    
 
                     vessel.Move(group.First().Position, newRowReload, _currentMaterial.Color);
                     yield return new WaitForSeconds(newRowReload);
@@ -256,15 +260,16 @@ namespace Code.Levels
 
                         cell.IsSpawned = true;
 
-                        for (int i = 1; i <= RowCount; i++)
-                        {
-                            var c = GetCell(cell.Position + Vector2Int.up * i);
-                            if (c != null && c.Color == cell.Color)
+                        if (!isHasSpawned)
+                            for (int i = 1; i <= RowCount; i++)
                             {
-                                _resultColbasTexture.SetPixel(c.Position.x, c.Position.y, _currentMaterial.Color);
-                                c.IsSpawned = true;
+                                var c = GetCell(cell.Position + Vector2Int.up * i);
+                                if (c != null && c.Color == cell.Color)
+                                {
+                                    _resultColbasTexture.SetPixel(c.Position.x, c.Position.y, _currentMaterial.Color);
+                                    c.IsSpawned = true;
+                                }
                             }
-                        }
 
                         if (counter >= 0)
                             continue;
@@ -272,7 +277,7 @@ namespace Code.Levels
                         _resultColbasTexture.Apply();
                         counter = oneStepSpawnGrainsCount;
 
-                        yield return dropRate;
+                        yield return new WaitForSeconds(dropRate);
                     }
                 }
             }
