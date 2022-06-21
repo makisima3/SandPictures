@@ -676,7 +676,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6393759047571069451}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0.7071068, w: 0}
-  m_LocalPosition: {x: 0, y: -0.8, z: 0}
+  m_LocalPosition: {x: 0, y: -1.019, z: 0}
   m_LocalScale: {x: 0.1222361, y: 0.1222361, z: 0.1222361}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -692,7 +692,7 @@ ParticleSystem:
   m_GameObject: {fileID: 6393759047571069451}
   serializedVersion: 8
   lengthInSec: 2
-  simulationSpeed: 2
+  simulationSpeed: 12
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -756,7 +756,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -819,7 +819,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 2
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -935,8 +935,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 16
-      minScalar: 8
+      scalar: 4
+      minScalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1258,7 +1258,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6
+      scalar: 12
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -1311,15 +1311,15 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 5
-    angle: 25
+    type: 0
+    angle: 79.35183
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
-    radiusThickness: 1
+    radiusThickness: 0
     donutRadius: 0.2
-    m_Position: {x: 0.0000000018936817, y: 0.000000010458958, z: 0.000060809052}
-    m_Rotation: {x: -1.21, y: -0, z: 0}
-    m_Scale: {x: 0.26, y: 0.58, z: 1.1828802}
+    m_Position: {x: -0.0000057054494, y: -0.0000018661367, z: 0.0057629626}
+    m_Rotation: {x: -0, y: -0, z: 0}
+    m_Scale: {x: 11.111273, y: 11.111273, z: 11.111273}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -1396,9 +1396,9 @@ ParticleSystem:
     m_TextureBilinearFiltering: 0
     randomDirectionAmount: 0
     sphericalDirectionAmount: 0
-    randomPositionAmount: 0
+    randomPositionAmount: 0.93
     radius:
-      value: 1
+      value: 0.23952022
       mode: 0
       spread: 0
       speed:
@@ -1517,7 +1517,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 24
+      scalar: 256
       minScalar: 10
       maxCurve:
         serializedVersion: 2
