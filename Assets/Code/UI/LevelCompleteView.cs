@@ -39,7 +39,7 @@ namespace Code.UI
             back.DOFade(blackoutForce, blackoutTime)
                 .OnComplete(() =>
                 {
-                    percentText.gameObject.SetActive(true);
+                    percentText.gameObject.SetActive(false);
                     nextLevelButton.gameObject.SetActive(true);
                     retryButton.gameObject.SetActive(true);
                 });

@@ -2,8 +2,10 @@
 using System.Linq;
 using Code.InitDatas;
 using DG.Tweening;
+using Plugins.RobyyUtils;
 using Plugins.SimpleFactory;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Code.Levels
 {
@@ -26,7 +28,10 @@ namespace Code.Levels
         {
             _grains = new Grain[initData.Size.x, initData.Size.y];
             
-            spawnPointView.transform.position = pointA.position;
+            var pos = spawnPointView.position;
+            pos.x = pointA.position.x;
+            spawnPointView.transform.position = pos;
+            
             sandPS.gameObject.SetActive(false);
 
             initData.OnSpawnStateChange.AddListener((isSpawn) => { sandPS.gameObject.SetActive(isSpawn); });
@@ -35,11 +40,17 @@ namespace Code.Levels
             _step = distance / initData.Size.x;
         }
 
-        public void Move(Vector2Int position, float time,Color color)
+        public void Move(Vector2Int position, float dropRate,Color color, bool onPS, UnityEvent onMoveEnd)
         {
             var pos = spawnPointView.position;
             pos.x = (pointB.position + Vector3.right * (_step * position.x)).x;
-            spawnPointView.DOMove(pos, time).SetEase(Ease.Linear);
+            
+            spawnPointView
+                .DOMove(pos, 
+                    ExtraMathf.GetTime(Vector3.Distance(spawnPointView.position,pos),dropRate))
+                .SetEase(Ease.Linear)
+                .OnComplete(onMoveEnd.Invoke);
+            sandPS.gameObject.SetActive(onPS);
             sandPS.startColor = color;
         }
 
