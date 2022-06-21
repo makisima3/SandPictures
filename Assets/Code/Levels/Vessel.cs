@@ -18,6 +18,7 @@ namespace Code.Levels
         [SerializeField] private Transform pointA;
         [SerializeField] private Transform pointB;
         [SerializeField] private ParticleSystem sandPS;
+        [SerializeField] private float timeEdgeToPsOff = 0.5f;
 
         private Grain[,] _grains;
         private float _step;
@@ -44,13 +45,13 @@ namespace Code.Levels
         {
             var pos = spawnPointView.position;
             pos.x = (pointB.position + Vector3.right * (_step * position.x)).x;
-            
+            var time = ExtraMathf.GetTime(Vector3.Distance(spawnPointView.position, pos),dropRate);
             spawnPointView
                 .DOMove(pos, 
-                    ExtraMathf.GetTime(Vector3.Distance(spawnPointView.position,pos),dropRate))
+                    time)
                 .SetEase(Ease.Linear)
                 .OnComplete(onMoveEnd.Invoke);
-            sandPS.gameObject.SetActive(onPS);
+            sandPS.gameObject.SetActive(time < timeEdgeToPsOff);
             sandPS.startColor = color;
         }
 
