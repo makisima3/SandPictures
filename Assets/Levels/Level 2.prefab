@@ -420,7 +420,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8983659085964362488
 Transform:
   m_ObjectHideFlags: 0
@@ -428,14 +428,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2384259847703945272}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.991, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: 0.023926549, w: 0.9997138}
+  m_LocalPosition: {x: -0.984, y: 0, z: 0}
   m_LocalScale: {x: 1.0303595, y: 1.0303595, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1597257046037902337}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 2.742}
 --- !u!65 &5702512667251557362
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -500,16 +500,16 @@ MonoBehaviour:
   baseTexture: {fileID: 2800000, guid: af37dc72f5e559c43aa507631835ce0b, type: 3}
   baseTextureView: {fileID: 2800000, guid: af37dc72f5e559c43aa507631835ce0b, type: 3}
   vessel: {fileID: 1418953858471844312}
-  dropRate: 10
+  dropRate: 40
   dropGrainTime: 0.1
   newRowReload: 0
   threshold: 0.226
-  _isLeftFirst: 0
+  _isLeftFirst: 1
   oneStepSpawnGrainsCount: 8
   toolView: {fileID: 2632544059349357036}
   maxZoneLength: 5000
   resultMeshRenderer: {fileID: 2054185937770208150}
-  RowCount: 2
+  RowCount: 5
   <MaterialHolder>k__BackingField:
     _uniqueMaterials: []
   OnSpawnStateChange:
@@ -576,7 +576,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8511521738650976765
 Transform:
   m_ObjectHideFlags: 0
@@ -584,14 +584,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5940409018228212794}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.981, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: -0.023908682, w: 0.9997142}
+  m_LocalPosition: {x: 0.966, y: 0, z: 0}
   m_LocalScale: {x: 1.0303595, y: 1.0303595, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1597257046037902337}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -2.74}
 --- !u!65 &3782130442580796920
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -676,7 +676,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6393759047571069451}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0.7071068, w: 0}
-  m_LocalPosition: {x: 0, y: -1.019, z: 0}
+  m_LocalPosition: {x: 0, y: -1.01, z: 0}
   m_LocalScale: {x: 0.1222361, y: 0.1222361, z: 0.1222361}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6037,7 +6037,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2671148080579687401, guid: d00a138b0e4f46747a60867274260551, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 72.48
+      value: 52.3
       objectReference: {fileID: 0}
     - target: {fileID: 2671148080579687401, guid: d00a138b0e4f46747a60867274260551, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6219,6 +6219,10 @@ PrefabInstance:
       propertyPath: grainsHolder
       value: 
       objectReference: {fileID: 2700835727074630108}
+    - target: {fileID: 7526270768739186426, guid: d00a138b0e4f46747a60867274260551, type: 3}
+      propertyPath: timeEdgeToPsOff
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 7526270768739186427, guid: d00a138b0e4f46747a60867274260551, type: 3}
       propertyPath: m_Enabled
       value: 1

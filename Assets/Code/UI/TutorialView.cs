@@ -17,6 +17,7 @@ namespace Code.UI
         [SerializeField] private float blackoutForce;
         [SerializeField] private float blackoutTime;
         [SerializeField] private Transform selectColorPoint;
+        [SerializeField] private Transform selectNextColorPoint;
         [SerializeField] private Transform tapPoint;
         [SerializeField] private float scaleForce = 0.2f;
         [SerializeField] private float animTime = 0.5f;
@@ -54,6 +55,24 @@ namespace Code.UI
             isFirstShown = true;
             tipText.text = "Hold to pour sand";
             hand.transform.position = tapPoint.position;
+        }
+        
+        public void ShowV3()
+        {
+            back.DOFade(0f, 0f);
+            gameObject.SetActive(true);
+            hand.gameObject.SetActive(false);
+            tipText.gameObject.SetActive(false);
+            back.DOFade(blackoutForce, blackoutTime)
+                .OnComplete(() => 
+                { 
+                    tipText.gameObject.SetActive(true);
+                    hand.gameObject.SetActive(true);
+                    tipText.text = "choose next color as on picture";
+                    hand.transform.position = selectNextColorPoint.position;
+                });
+            
+            
         }
 
         public void Hide()

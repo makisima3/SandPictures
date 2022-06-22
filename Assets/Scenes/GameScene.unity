@@ -502,6 +502,7 @@ MonoBehaviour:
   blackoutForce: 0.7
   blackoutTime: 0.7
   selectColorPoint: {fileID: 601097676}
+  selectNextColorPoint: {fileID: 1197671563}
   tapPoint: {fileID: 389092529}
   scaleForce: 0.3
   animTime: 1
@@ -523,6 +524,7 @@ RectTransform:
   - {fileID: 755186274}
   - {fileID: 389092529}
   - {fileID: 601097676}
+  - {fileID: 1197671563}
   m_Father: {fileID: 1362559984}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2500,6 +2502,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   registry:
   - {fileID: 4361833834401925381, guid: 43b4e95d1e6940540b3eca93e276bc9e, type: 3}
+--- !u!1 &1197671562
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1197671563}
+  m_Layer: 5
+  m_Name: SelectNextColorPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1197671563
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1197671562}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 327222745}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.33170372, y: 0}
+  m_AnchorMax: {x: 0.5268519, y: 0.09946298}
+  m_AnchoredPosition: {x: -0.5, y: -1.8000488}
+  m_SizeDelta: {x: -1.2536926, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1319167099
 GameObject:
   m_ObjectHideFlags: 0

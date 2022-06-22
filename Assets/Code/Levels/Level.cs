@@ -5,6 +5,7 @@ using System.Linq;
 using Code.InitDatas;
 using Code.UI;
 using Code.Utils;
+using DG.Tweening;
 using Plugins.SimpleFactory;
 using UnityEngine;
 using UnityEngine.Events;
@@ -34,8 +35,9 @@ namespace Code.Levels
         [SerializeField] private int maxZoneLength = 5000;
         [SerializeField] private MeshRenderer resultMeshRenderer;
         [SerializeField] private int RowCount = 3;
-
-
+        [SerializeField] private ParticleSystem confetti;
+        
+        private TutorialView tutorialView;
         private Coroutine spawnCoroutine;
         private Cell[,] _cells;
         private List<Color> _uniqueColors;
@@ -54,11 +56,13 @@ namespace Code.Levels
 
         private UnityEvent onMoveEnd;
         private bool isMoveEnd;
-        
+        private int _level;
         public void Initialize(LevelInitData initData)
         {
+            _level = initData.Level;
             MaterialHolder = new MaterialHolder();
             _levelCompleteView = initData.LevelCompleteView;
+            tutorialView = initData.TutorialView;
             _targetImage = initData.TargetImage;
             onMoveEnd = new UnityEvent();
             onMoveEnd.AddListener(() => isMoveEnd = true);
@@ -234,6 +238,10 @@ namespace Code.Levels
                         _zones.Skip(currentZoneIndex - 1).First().First().Color)
                     {
                         _isSpawn = false;
+                        if(confetti != null)
+                            confetti.Play();
+                        if(_level == 0 && currentZoneIndex == 0)
+                            tutorialView.ShowV3();
                         break;
                     }
                 }
@@ -249,7 +257,8 @@ namespace Code.Levels
                 Vector2Int lastCell = Vector2Int.zero;
                 for (int i = 0; i < rows.Length; i += RowCount)
                 {
-                    _isLeftFirst = !_isLeftFirst;
+                    if (!_isSpawn)
+                        break;
 
                     List<Cell> rowsGroup;
                     if (_isLeftFirst)
@@ -266,14 +275,6 @@ namespace Code.Levels
 
                         counter--;
                         
-
-                        if (!_isSpawn)
-                            break;
-                        
-                        isMoveEnd = false;
-                        vessel.Move(rowsGroup[j].Position, dropRate, _currentMaterial.Color, true,onMoveEnd);
-
-                        
                         _resultColbasTexture.SetPixel(rowsGroup[j].Position.x, rowsGroup[j].Position.y,
                             _currentMaterial.Color);
                         rowsGroup[j].IsSpawned = true;
@@ -281,16 +282,21 @@ namespace Code.Levels
                         if (counter >= 0)
                             continue;
 
+                        isMoveEnd = false;
+                        vessel.Move(rowsGroup[j].Position, dropRate, _currentMaterial.Color, true).OnComplete(onMoveEnd.Invoke);
+                        
                         _resultColbasTexture.Apply();
                         counter = oneStepSpawnGrainsCount;
 
                         //var step = lastCell.x > rowsGroup[j].Position.x ? -1: 1;
                         
-                        yield return new WaitWhile(() => isMoveEnd);
+                        yield return new WaitUntil(() => isMoveEnd);
                         
                         
                         //yield return new WaitForSeconds(dropRate);
                     }
+                    
+                    _isLeftFirst = !_isLeftFirst;
                 }
             }
         }

@@ -67,7 +67,8 @@ namespace Code
                 WorldFactory = worldFactory,
                 BaseMaterial = grainBaseMaterial,
                 TargetImage = targetImage,
-                LevelCompleteView = levelCompleteView
+                LevelCompleteView = levelCompleteView,
+                TutorialView = tutorialView,
             });
             return spawnedLevel;
         }

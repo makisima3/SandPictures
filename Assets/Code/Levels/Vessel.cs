@@ -22,17 +22,17 @@ namespace Code.Levels
 
         private Grain[,] _grains;
         private float _step;
-        
+
         private IOrderedEnumerable<IGrouping<Color, Cell>> _zones;
 
         public void Initialize(VesselInitData initData)
         {
             _grains = new Grain[initData.Size.x, initData.Size.y];
-            
+
             var pos = spawnPointView.position;
             pos.x = pointA.position.x;
             spawnPointView.transform.position = pos;
-            
+
             sandPS.gameObject.SetActive(false);
 
             initData.OnSpawnStateChange.AddListener((isSpawn) => { sandPS.gameObject.SetActive(isSpawn); });
@@ -41,20 +41,33 @@ namespace Code.Levels
             _step = distance / initData.Size.x;
         }
 
-        public void Move(Vector2Int position, float dropRate,Color color, bool onPS, UnityEvent onMoveEnd)
+        public Tween Move(Vector2Int position, float dropRate, Color color, bool onPS)
         {
             var pos = spawnPointView.position;
             pos.x = (pointB.position + Vector3.right * (_step * position.x)).x;
-            var time = ExtraMathf.GetTime(Vector3.Distance(spawnPointView.position, pos),dropRate);
-            spawnPointView
-                .DOMove(pos, 
-                    time)
-                .SetEase(Ease.Linear)
-                .OnComplete(onMoveEnd.Invoke);
-            sandPS.gameObject.SetActive(time < timeEdgeToPsOff);
+            var time = ExtraMathf.GetTime(Vector3.Distance(spawnPointView.position, pos), dropRate);
+
+            if (time < timeEdgeToPsOff)
+                sandPS.startLifetime = 15;
+            else
+                sandPS.startLifetime = 0;
+            //sandPS.gameObject.SetActive(time < timeEdgeToPsOff);
             sandPS.startColor = color;
+            
+           return spawnPointView
+                .DOMove(pos, time)
+                .SetEase(Ease.Linear);
         }
 
+        private void Test(UnityEvent onMoveEnd)
+        {
+            if(onMoveEnd == null)
+                return;
+            
+            Debug.Log("MoveEnd");
+            onMoveEnd?.Invoke();
+        }
+        
         public float CompareResult(Cell[,] cells)
         {
             var correctGrainsCount = 0f;
