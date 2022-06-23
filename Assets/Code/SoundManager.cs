@@ -20,6 +20,18 @@ namespace Code
         {
             _audioSource.PlayOneShot(audioClip);
         }
+
+        public void StartPlay()
+        {
+            _audioSource.clip = audioClip;
+            _audioSource.loop = true;
+            _audioSource.Play();
+        }
         
+        public void StopPlay()
+        {
+            _audioSource.Pause();
+        }
+
     }
 }

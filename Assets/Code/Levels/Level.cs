@@ -36,7 +36,9 @@ namespace Code.Levels
         [SerializeField] private MeshRenderer resultMeshRenderer;
         [SerializeField] private int RowCount = 3;
         [SerializeField] private ParticleSystem confetti;
-        
+        [SerializeField] private Transform camera;
+        [SerializeField] private Transform endPoint;
+        [SerializeField] private float cameraMoveTime = 1f;
         private TutorialView tutorialView;
         private Coroutine spawnCoroutine;
         private Cell[,] _cells;
@@ -57,6 +59,7 @@ namespace Code.Levels
         private UnityEvent onMoveEnd;
         private bool isMoveEnd;
         private int _level;
+
         public void Initialize(LevelInitData initData)
         {
             _level = initData.Level;
@@ -72,11 +75,17 @@ namespace Code.Levels
                     Vector2.one / 2);
 
             int id = 0;
-            foreach (var color in _uniqueColors)
+            _zones = _cells
+                .Cast<Cell>()
+                .Where(c => !c.IsEmpty)
+                .GroupBy(c => c.Color)
+                .OrderBy(z => z.Sum(c => c.Position.y) / z.Count());
+
+            foreach (var color in _zones)
             {
                 var material = new Material(initData.BaseMaterial)
                 {
-                    color = color,
+                    color = color.Key,
                 };
 
                 MaterialHolder.Register(new MaterialHolder.UniqueMaterial(id, material));
@@ -99,11 +108,7 @@ namespace Code.Levels
                 firstColor = _uniqueColors.First()
             });
 
-            _zones = _cells
-                .Cast<Cell>()
-                .Where(c => !c.IsEmpty)
-                .GroupBy(c => c.Color)
-                .OrderBy(z => z.Sum(c => c.Position.y) / z.Count());
+           
         }
 
         public void StartSpawn()
@@ -114,6 +119,8 @@ namespace Code.Levels
             _isSpawn = true;
             OnSpawnStateChange.Invoke(_isSpawn);
             spawnCoroutine = StartCoroutine(SpawnV5());
+            
+            SoundManager.Instance.StartPlay();
         }
 
         public void StopSpawn()
@@ -125,6 +132,8 @@ namespace Code.Levels
                 StopCoroutine(spawnCoroutine);
                 spawnCoroutine = null;
             }
+            
+            SoundManager.Instance.StopPlay();
         }
 
         public void SelectMaterial(MaterialHolder.UniqueMaterial material)
@@ -213,6 +222,23 @@ namespace Code.Levels
 
             return _cells[position.x, position.y];
         }
+
+        public float CompareResult()
+        {
+            var correctGrainsCount = 0f;
+
+            for (int x = 0; x < _resultTargetTexture.width; x++)
+            {
+                for (int y = 0; y < _resultTargetTexture.height; y++)
+                {
+                    if (_resultTargetTexture.GetPixel(x, y) == _resultColbasTexture.GetPixel(x, y))
+                        correctGrainsCount++;
+                }
+            }
+
+            return correctGrainsCount / (_resultTargetTexture.width * _resultTargetTexture.height);
+        }
+        
         private IEnumerator SpawnV5()
         {
             while (_isSpawn)
@@ -227,9 +253,11 @@ namespace Code.Levels
                     if (currentZoneIndex >= _zones.Count())
                     {
                         _isEnded = true;
-
-                        // var percetn = vessel.CompareResultV2(_cells);
-                        _levelCompleteView.Show(0);
+                        confetti.Play();
+                        var percetn = CompareResult();
+                        _levelCompleteView.Show(percetn);
+                        camera.DOMove(endPoint.position, cameraMoveTime);
+                        camera.DORotateQuaternion(endPoint.rotation, cameraMoveTime);
                         _isSpawn = false;
                         yield break;
                     }
@@ -238,9 +266,9 @@ namespace Code.Levels
                         _zones.Skip(currentZoneIndex - 1).First().First().Color)
                     {
                         _isSpawn = false;
-                        if(confetti != null)
-                            confetti.Play();
-                        if(_level == 0 && currentZoneIndex == 0)
+                        OnSpawnStateChange.Invoke(_isSpawn);
+                        confetti.Play();
+                        if (_level == 0 && currentZoneIndex == 1)
                             tutorialView.ShowV3();
                         break;
                     }
@@ -266,7 +294,7 @@ namespace Code.Levels
                             .ToList();
                     else
                         rowsGroup = rows.Skip(i).Take(RowCount).SelectMany(c => c).OrderBy(c => c.Position.x).ToList();
-      
+
                     var counter = oneStepSpawnGrainsCount;
                     for (int j = 0; j < rowsGroup.Count(); j++)
                     {
@@ -274,7 +302,7 @@ namespace Code.Levels
                             break;
 
                         counter--;
-                        
+
                         _resultColbasTexture.SetPixel(rowsGroup[j].Position.x, rowsGroup[j].Position.y,
                             _currentMaterial.Color);
                         rowsGroup[j].IsSpawned = true;
@@ -283,19 +311,20 @@ namespace Code.Levels
                             continue;
 
                         isMoveEnd = false;
-                        vessel.Move(rowsGroup[j].Position, dropRate, _currentMaterial.Color, true).OnComplete(onMoveEnd.Invoke);
-                        
+                        vessel.Move(rowsGroup[j].Position, dropRate, _currentMaterial.Color, true)
+                            .OnComplete(onMoveEnd.Invoke);
+
                         _resultColbasTexture.Apply();
                         counter = oneStepSpawnGrainsCount;
 
                         //var step = lastCell.x > rowsGroup[j].Position.x ? -1: 1;
-                        
+
                         yield return new WaitUntil(() => isMoveEnd);
-                        
-                        
+
+
                         //yield return new WaitForSeconds(dropRate);
                     }
-                    
+
                     _isLeftFirst = !_isLeftFirst;
                 }
             }

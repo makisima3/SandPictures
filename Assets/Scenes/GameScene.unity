@@ -664,7 +664,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.6
+  m_fontSize: 72
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1004,8 +1004,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   back: {fileID: 1424133970}
-  blackoutForce: 0.7
-  blackoutTime: 0.7
+  blackoutForce: 0
+  blackoutTime: 0
   percentText: {fileID: 784629300}
   nextLevelButton: {fileID: 1611307968}
   retryButton: {fileID: 1016645791}
@@ -1728,7 +1728,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 52.55
+  m_fontSize: 72
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2676,7 +2676,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1eb828a7b954952b23f2f25036f7d7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioClip: {fileID: 0}
+  audioClip: {fileID: 8300000, guid: 2b968f9197cfabd4897bec537e5da3b7, type: 3}
 --- !u!4 &1354084861
 Transform:
   m_ObjectHideFlags: 0
@@ -3081,7 +3081,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21.45
+  m_fontSize: 46.15
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
