@@ -398,7 +398,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1968984112432579588}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25.6, y: 14.1, z: -69.1}
+  m_LocalPosition: {x: 25, y: 26.4, z: -83.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -534,7 +534,7 @@ MonoBehaviour:
   baseTexture: {fileID: 2800000, guid: af37dc72f5e559c43aa507631835ce0b, type: 3}
   baseTextureView: {fileID: 2800000, guid: af37dc72f5e559c43aa507631835ce0b, type: 3}
   vessel: {fileID: 1418953858471844312}
-  dropRate: 50
+  dropRate: 80
   dropGrainTime: 0.1
   newRowReload: 0
   threshold: 0.226
@@ -543,11 +543,15 @@ MonoBehaviour:
   toolView: {fileID: 2632544059349357036}
   maxZoneLength: 5000
   resultMeshRenderer: {fileID: 2054185937770208150}
-  RowCount: 5
+  RowCount: 4
   confetti: {fileID: 4539851388768815982}
   camera: {fileID: 5071987327604113135}
   endPoint: {fileID: 2248066118788256614}
   cameraMoveTime: 1
+  SelectColorHapticType: 0
+  levelEndHapticType: 5
+  levelEndHapticCount: 3
+  levelEndHapticDelay: 0.2
   <MaterialHolder>k__BackingField:
     _uniqueMaterials: []
   OnSpawnStateChange:
@@ -5810,7 +5814,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7350277894637269122}
   m_LocalRotation: {x: 0.10038744, y: -0, z: -0, w: 0.99494845}
-  m_LocalPosition: {x: 25, y: 51, z: -88.56}
+  m_LocalPosition: {x: 25, y: 34.7, z: -91.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6408,7 +6412,7 @@ PrefabInstance:
       objectReference: {fileID: 2700835727074630108}
     - target: {fileID: 7526270768739186426, guid: d00a138b0e4f46747a60867274260551, type: 3}
       propertyPath: timeEdgeToPsOff
-      value: 0.2
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 7526270768739186427, guid: d00a138b0e4f46747a60867274260551, type: 3}
       propertyPath: m_Enabled

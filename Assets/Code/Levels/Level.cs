@@ -6,6 +6,7 @@ using Code.InitDatas;
 using Code.UI;
 using Code.Utils;
 using DG.Tweening;
+using MoreMountains.NiceVibrations;
 using Plugins.SimpleFactory;
 using UnityEngine;
 using UnityEngine.Events;
@@ -39,7 +40,10 @@ namespace Code.Levels
         [SerializeField] private Transform camera;
         [SerializeField] private Transform endPoint;
         [SerializeField] private float cameraMoveTime = 1f;
-
+        [SerializeField] private HapticTypes SelectColorHapticType;
+        [SerializeField] private HapticTypes levelEndHapticType;
+        [SerializeField] private int levelEndHapticCount = 3;
+        [SerializeField] private float levelEndHapticDelay = 0.1f;
         private ColorsSelector _colorsSelector;
         private TutorialView tutorialView;
         private Coroutine spawnCoroutine;
@@ -141,6 +145,7 @@ namespace Code.Levels
 
         public void SelectMaterial(MaterialHolder.UniqueMaterial material)
         {
+            MMVibrationManager.Haptic(SelectColorHapticType);
             _currentMaterial = material;
             toolView.SetToolPipe(material.Color);
         }
@@ -266,6 +271,7 @@ namespace Code.Levels
                         _colorsSelector.gameObject.SetActive(false);
                         toolView.gameObject.SetActive(false);
                         SoundManager.Instance.StopPlay();
+                        StartCoroutine(LevelEndVibration());
                         yield break;
                     }
 
@@ -295,7 +301,6 @@ namespace Code.Levels
                 {
                     if (!_isSpawn)
                     {
-                        _resultColbasTexture.Apply();
                         break;
                     }
 
@@ -311,7 +316,6 @@ namespace Code.Levels
                     {
                         if (!_isSpawn)
                         {
-                            _resultColbasTexture.Apply();
                             break;
                         }
 
@@ -324,6 +328,7 @@ namespace Code.Levels
                         if (counter >= 0)
                             continue;
 
+                        
                         isMoveEnd = false;
                         vessel.Move(rowsGroup[j].Position, dropRate, _currentMaterial.Color, true)
                             .OnComplete(onMoveEnd.Invoke);
@@ -331,17 +336,23 @@ namespace Code.Levels
                         _resultColbasTexture.Apply();
                         counter = oneStepSpawnGrainsCount;
 
-                        //var step = lastCell.x > rowsGroup[j].Position.x ? -1: 1;
-
                         yield return new WaitUntil(() => isMoveEnd);
-
-
-                        //yield return new WaitForSeconds(dropRate);
                     }
 
                     _isLeftFirst = !_isLeftFirst;
                 }
             }
         }
+
+        private IEnumerator LevelEndVibration()
+        {
+            for (int i = 0; i < levelEndHapticCount; i++)
+            {
+                MMVibrationManager.Haptic(levelEndHapticType);
+
+                yield return new WaitForSeconds(levelEndHapticDelay);
+            }
+        }
+        
     }
 }

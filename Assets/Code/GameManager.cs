@@ -27,7 +27,6 @@ namespace Code
         {
             Application.targetFrameRate = 120;
             
-            levelCompleteView.Initialize(new LevelCompleteInitData(){});
             
             _levelStorageObject =
                 PersistentStorage.PersistentStorage.Load<LevelStorageObject, LevelStorageObject.LevelData>(
@@ -47,9 +46,16 @@ namespace Code
                 UIFactory = uiFactory
             });
 
+            levelCompleteView.Initialize(new LevelCompleteInitData()
+            {
+                ColorsSelector = colorsSelector,
+            });
             _inputCatcher.Initialize(new InputCatcherInitData() {Level = level});
 
-            tutorialView.Initialize(new LevelCompleteInitData());
+            tutorialView.Initialize(new LevelCompleteInitData()
+            {
+                ColorsSelector = colorsSelector,
+            });
             
             if (_levelStorageObject.Data.Level == 0)
             {

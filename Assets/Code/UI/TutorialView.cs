@@ -1,6 +1,8 @@
-﻿using Code.InitDatas;
+﻿using System.Linq;
+using Code.InitDatas;
 using Code.StoragesObjects;
 using DG.Tweening;
+using Plugins.RobyyUtils;
 using Plugins.SimpleFactory;
 using TMPro;
 using UnityEngine;
@@ -10,7 +12,7 @@ using UnityEngine.UI;
 
 namespace Code.UI
 {
-    public class TutorialView : MonoBehaviour, IInitialized<LevelCompleteInitData>,IPointerClickHandler
+    public class TutorialView : Singleton<TutorialView>, IInitialized<LevelCompleteInitData>,IPointerClickHandler
     {
         [SerializeField] private Image back;
         [SerializeField] private Image hand;
@@ -25,11 +27,12 @@ namespace Code.UI
 
         private Tween _tween;
         private bool isFirstShown;
+        private ColorsSelector _selector;
         
         public void Initialize(LevelCompleteInitData initData)
         {
+            _selector = initData.ColorsSelector;
             back.DOFade(0f, 0f);
-            
             gameObject.SetActive(false);
             hand.gameObject.SetActive(false);
             tipText.gameObject.SetActive(false);
@@ -37,6 +40,7 @@ namespace Code.UI
 
         public void Show()
         {
+           
             gameObject.SetActive(true);
             tipText.text = "choose color as on picture";
             back.DOFade(blackoutForce, blackoutTime)
@@ -56,7 +60,8 @@ namespace Code.UI
             tipText.text = "Hold to pour sand";
             hand.transform.position = tapPoint.position;
         }
-        
+
+        private bool isShowV3;
         public void ShowV3()
         {
             back.DOFade(0f, 0f);
@@ -71,8 +76,8 @@ namespace Code.UI
                     tipText.text = "choose next color as on picture";
                     hand.transform.position = selectNextColorPoint.position;
                 });
-            
-            
+            isShowV3 = true;
+
         }
 
         public void Hide()
@@ -83,9 +88,19 @@ namespace Code.UI
         public void OnPointerClick(PointerEventData eventData)
         {
             if (!isFirstShown)
+            {
+                _selector.Buttons.First().SelectColor();
                 ShowV2();
-            else
+            }
+            else if (isFirstShown && isShowV3)
+            {
+                _selector.Buttons.Skip(1).First().SelectColor();
                 Hide();
+            }
+            else
+            {
+                Hide();
+            }
         }
     }
 }

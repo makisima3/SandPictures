@@ -12,6 +12,8 @@ namespace Code.UI
 
         private List<SelectColorButton> _buttons;
 
+        public List<SelectColorButton> Buttons => _buttons;
+
         public void Initialize(ColorsSelectorInitData initData)
         {
             _buttons = new List<SelectColorButton>();

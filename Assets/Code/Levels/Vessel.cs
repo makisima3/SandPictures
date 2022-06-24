@@ -33,9 +33,9 @@ namespace Code.Levels
             pos.x = pointA.position.x;
             spawnPointView.transform.position = pos;
 
-            sandPS.gameObject.SetActive(false);
+            sandPS.gameObject.SetActive(true);sandPS.startLifetime = 0;
 
-            initData.OnSpawnStateChange.AddListener((isSpawn) => { sandPS.gameObject.SetActive(isSpawn); });
+            initData.OnSpawnStateChange.AddListener((isSpawn) => { sandPS.startLifetime = !isSpawn ? 0 : 15; });
 
             var distance = Vector3.Distance(pointA.position, pointB.position);
             _step = distance / initData.Size.x;
@@ -48,9 +48,16 @@ namespace Code.Levels
             var time = ExtraMathf.GetTime(Vector3.Distance(spawnPointView.position, pos), dropRate);
 
             if (time < timeEdgeToPsOff)
+            {
                 sandPS.startLifetime = 15;
+               
+            }
             else
+            {
+                time *= 2;
                 sandPS.startLifetime = 0;
+            }
+
             //sandPS.gameObject.SetActive(time < timeEdgeToPsOff);
             sandPS.startColor = color;
             

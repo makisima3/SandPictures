@@ -64,7 +64,7 @@ namespace Code.UI
         private void Setter(float value)
         {
             this.value = value;
-            percentText.text = $"your result\n{value * 100}%";
+            percentText.text = $"{value * 100}%";
             progressImage.fillAmount = value;
         }
 
