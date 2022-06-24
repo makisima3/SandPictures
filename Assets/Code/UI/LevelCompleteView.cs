@@ -17,7 +17,14 @@ namespace Code.UI
         [SerializeField] private TMP_Text percentText;
         [SerializeField] private Button nextLevelButton;
         [SerializeField] private Button retryButton;
-        
+        [SerializeField] private float animTime = 1f;
+        [SerializeField] private Image progressImage;
+        [SerializeField] private Transform animatedTransform;
+        [SerializeField] private float animatedTransformForce;
+        [SerializeField] private int animatedTransformLoopsCount;
+        [SerializeField] private float animatedTransformTime;
+
+        private float value;
         public void Initialize(LevelCompleteInitData initData)
         {
             back.DOFade(0f, 0f);
@@ -34,15 +41,36 @@ namespace Code.UI
         public void Show(float percent)
         {
             gameObject.SetActive(true);
-            percentText.text = $"your result\n{percent * 100}%";
+            percentText.text = $"{(percent * 100):F1}%";
 
             back.DOFade(blackoutForce, blackoutTime)
                 .OnComplete(() =>
                 {
+                    animatedTransform.DOScale(animatedTransform.localScale + Vector3.one * animatedTransformForce,
+                        animatedTransformTime).SetLoops(animatedTransformLoopsCount, LoopType.Yoyo);
+                    DOTween.To(Getter, Setter, percent, animTime);
                     percentText.gameObject.SetActive(true);
                     nextLevelButton.gameObject.SetActive(true);
                     retryButton.gameObject.SetActive(true);
                 });
+        }
+
+        [ContextMenu("Show")]
+        public void Show()
+        {
+            Show(1);
+        }
+
+        private void Setter(float value)
+        {
+            this.value = value;
+            percentText.text = $"your result\n{value * 100}%";
+            progressImage.fillAmount = value;
+        }
+
+        private float Getter()
+        {
+            return value;
         }
 
         private void NextLevel()

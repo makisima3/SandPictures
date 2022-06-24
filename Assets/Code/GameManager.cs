@@ -69,6 +69,7 @@ namespace Code
                 TargetImage = targetImage,
                 LevelCompleteView = levelCompleteView,
                 TutorialView = tutorialView,
+                ColorsSelector = colorsSelector
             });
             return spawnedLevel;
         }

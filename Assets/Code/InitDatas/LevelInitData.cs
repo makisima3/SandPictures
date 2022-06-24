@@ -8,6 +8,7 @@ namespace Code.InitDatas
     public class LevelInitData
     {
         public SimpleFactory WorldFactory { get; set; }
+        public ColorsSelector ColorsSelector { get; set; }
         public int Level { get; set; }
         public Material BaseMaterial { get; set; }
         public TutorialView TutorialView { get; set; }

@@ -39,6 +39,8 @@ namespace Code.Levels
         [SerializeField] private Transform camera;
         [SerializeField] private Transform endPoint;
         [SerializeField] private float cameraMoveTime = 1f;
+
+        private ColorsSelector _colorsSelector;
         private TutorialView tutorialView;
         private Coroutine spawnCoroutine;
         private Cell[,] _cells;
@@ -63,6 +65,7 @@ namespace Code.Levels
         public void Initialize(LevelInitData initData)
         {
             _level = initData.Level;
+            _colorsSelector = initData.ColorsSelector;
             MaterialHolder = new MaterialHolder();
             _levelCompleteView = initData.LevelCompleteView;
             tutorialView = initData.TutorialView;
@@ -243,6 +246,7 @@ namespace Code.Levels
         {
             while (_isSpawn)
             {
+                _resultColbasTexture.Apply();
                 //Проверка закрашена ли зона
                 var isZoneCompleted = _zones.Skip(currentZoneIndex).First().All(c => c.IsSpawned);
 
@@ -259,6 +263,9 @@ namespace Code.Levels
                         camera.DOMove(endPoint.position, cameraMoveTime);
                         camera.DORotateQuaternion(endPoint.rotation, cameraMoveTime);
                         _isSpawn = false;
+                        _colorsSelector.gameObject.SetActive(false);
+                        toolView.gameObject.SetActive(false);
+                        SoundManager.Instance.StopPlay();
                         yield break;
                     }
 
@@ -268,6 +275,7 @@ namespace Code.Levels
                         _isSpawn = false;
                         OnSpawnStateChange.Invoke(_isSpawn);
                         confetti.Play();
+                        SoundManager.Instance.StopPlay();
                         if (_level == 0 && currentZoneIndex == 1)
                             tutorialView.ShowV3();
                         break;
@@ -286,7 +294,10 @@ namespace Code.Levels
                 for (int i = 0; i < rows.Length; i += RowCount)
                 {
                     if (!_isSpawn)
+                    {
+                        _resultColbasTexture.Apply();
                         break;
+                    }
 
                     List<Cell> rowsGroup;
                     if (_isLeftFirst)
@@ -299,7 +310,10 @@ namespace Code.Levels
                     for (int j = 0; j < rowsGroup.Count(); j++)
                     {
                         if (!_isSpawn)
+                        {
+                            _resultColbasTexture.Apply();
                             break;
+                        }
 
                         counter--;
 
