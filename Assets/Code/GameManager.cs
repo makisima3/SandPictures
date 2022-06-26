@@ -25,8 +25,8 @@ namespace Code
 
         private void Awake()
         {
-            Application.targetFrameRate = 120;
-            
+            Application.targetFrameRate = 30;
+            QualitySettings.vSyncCount = 0;
             
             _levelStorageObject =
                 PersistentStorage.PersistentStorage.Load<LevelStorageObject, LevelStorageObject.LevelData>(

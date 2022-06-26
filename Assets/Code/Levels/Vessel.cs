@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Code.InitDatas;
 using DG.Tweening;
@@ -66,61 +67,27 @@ namespace Code.Levels
                 .SetEase(Ease.Linear);
         }
 
-        private void Test(UnityEvent onMoveEnd)
+        public int Position;
+        public float _speed;
+        private bool _isMoving;
+        public void StartMove()
         {
-            if(onMoveEnd == null)
+            _isMoving = true;
+        }
+
+        public void StopMove()
+        {
+            _isMoving = false;
+        }
+
+        private void Update()
+        {
+            if(!_isMoving)
                 return;
             
-            Debug.Log("MoveEnd");
-            onMoveEnd?.Invoke();
-        }
-        
-        public float CompareResult(Cell[,] cells)
-        {
-            var correctGrainsCount = 0f;
-
-            for (int x = 0; x < cells.GetLength(0); x++)
-            {
-                for (int y = 0; y < cells.GetLength(1); y++)
-                {
-                    if (cells[x, y].Color == _grains[x, y].Color)
-                        correctGrainsCount++;
-                }
-            }
-
-            return correctGrainsCount / cells.Length;
-        }
-
-        private Cell[,] _cells;
-
-        public float CompareResultV2(Cell[,] cells)
-        {
-            _cells = cells;
-            var correctGrainsCount = 0f;
-
-            for (int x = 0; x < cells.GetLength(0); x++)
-            {
-                for (int y = 0; y < cells.GetLength(1); y++)
-                {
-                    if (cells[x, y].Color == _grains[x, y].Color)
-                        correctGrainsCount += validCellPoint;
-                    else
-                        correctGrainsCount -= invalidCellPoint;
-                }
-            }
-
-            return correctGrainsCount / (cells.Length * validCellPoint);
-        }
-
-        [ContextMenu("Compare")]
-        private void Test()
-        {
-            Debug.Log(CompareResultV2(_cells));
-        }
-
-        public float Remap(float value, float fromLower, float fromUpper, float toLower, float toUpper)
-        {
-            return (toUpper - toLower) * ((value - fromLower) / (fromUpper - fromLower)) + toLower;
+            var pos = spawnPointView.position;
+            pos.x = (pointB.position + Vector3.right * (_step * Position)).x;
+            spawnPointView.transform.position = Vector3.Lerp(spawnPointView.transform.position,pos,_speed);
         }
     }
 }
