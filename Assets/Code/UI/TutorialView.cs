@@ -42,7 +42,7 @@ namespace Code.UI
         {
            
             gameObject.SetActive(true);
-            tipText.text = "Сhoose color as on picture";
+            tipText.text = "Choose color as on picture";
             back.DOFade(blackoutForce, blackoutTime)
                 .OnComplete(() =>
                 {
@@ -73,7 +73,7 @@ namespace Code.UI
                 { 
                     tipText.gameObject.SetActive(true);
                     hand.gameObject.SetActive(true);
-                    tipText.text = "Сhoose next color as on picture";
+                    tipText.text = "Choose next color as on picture";
                     hand.transform.position = selectNextColorPoint.position;
                 });
             isShowV3 = true;
