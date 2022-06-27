@@ -539,7 +539,7 @@ MonoBehaviour:
   newRowReload: 0
   threshold: 0.226
   _isLeftFirst: 1
-  oneStepSpawnGrainsCount: 36
+  oneStepSpawnGrainsCount: 26
   toolView: {fileID: 2632544059349357036}
   maxZoneLength: 5000
   resultMeshRenderer: {fileID: 2054185937770208150}
@@ -548,7 +548,7 @@ MonoBehaviour:
   camera: {fileID: 5071987327604113135}
   endPoint: {fileID: 2248066118788256614}
   cameraMoveTime: 1
-  SelectColorHapticType: 0
+  SelectColorHapticType: 5
   levelEndHapticType: 5
   levelEndHapticCount: 3
   levelEndHapticDelay: 0.2
@@ -5813,14 +5813,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7350277894637269122}
-  m_LocalRotation: {x: 0.10038744, y: -0, z: -0, w: 0.99494845}
-  m_LocalPosition: {x: 25, y: 34.7, z: -91.9}
+  m_LocalRotation: {x: 0.10452846, y: 0, z: 0, w: 0.9945219}
+  m_LocalPosition: {x: 24.7, y: 49.3, z: -82.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4334998559187529132}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 11.523, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 12, y: 0, z: 0}
 --- !u!20 &8843466308836603061
 Camera:
   m_ObjectHideFlags: 0
