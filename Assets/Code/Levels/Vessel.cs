@@ -45,6 +45,7 @@ namespace Code.Levels
         {
             var pos = spawnPointView.position;
             pos.x = (pointB.position + Vector3.right * (_step * position.x)).x;
+            pos.x = Mathf.Clamp(pos.x, pointB.position.x, pointA.position.x);
             var time = ExtraMathf.GetTime(Vector3.Distance(spawnPointView.position, pos), dropRate);
 
             if (time < timeEdgeToPsOff)
