@@ -64,7 +64,7 @@ namespace Code.UI
         private void Setter(float value)
         {
             this.value = value;
-            percentText.text = $"{value * 100}%";
+            percentText.text = $"{Mathf.RoundToInt(value * 100)}%";
             progressImage.fillAmount = value;
         }
 

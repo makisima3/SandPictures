@@ -501,7 +501,7 @@ MonoBehaviour:
   back: {fileID: 1052547439}
   hand: {fileID: 2116671883}
   blackoutForce: 0.7
-  blackoutTime: 0.7
+  blackoutTime: 0
   selectColorPoint: {fileID: 601097676}
   selectNextColorPoint: {fileID: 1197671563}
   tapPoint: {fileID: 389092529}
