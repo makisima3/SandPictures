@@ -44,6 +44,7 @@ namespace Code.Levels
         [SerializeField] private HapticTypes levelEndHapticType;
         [SerializeField] private int levelEndHapticCount = 3;
         [SerializeField] private float levelEndHapticDelay = 0.1f;
+        [SerializeField] private int toolOffset;
         private ColorsSelector _colorsSelector;
         private TutorialView tutorialView;
         private Coroutine spawnCoroutine;
@@ -332,7 +333,8 @@ namespace Code.Levels
 
                         
                         isMoveEnd = false;
-                        vessel.Move(rowsGroup[j].Position, dropRate, _currentMaterial.Color, true)
+                        var offset = _isLeftFirst ? -toolOffset : toolOffset;
+                        vessel.Move(rowsGroup[j].Position + Vector2Int.right * offset, dropRate, _currentMaterial.Color, true)
                             .OnComplete(onMoveEnd.Invoke);
 
                         _resultColbasTexture.Apply();
