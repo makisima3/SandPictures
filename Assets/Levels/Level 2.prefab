@@ -539,7 +539,7 @@ MonoBehaviour:
   newRowReload: 0
   threshold: 0.226
   _isLeftFirst: 1
-  oneStepSpawnGrainsCount: 8
+  oneStepSpawnGrainsCount: 36
   toolView: {fileID: 2632544059349357036}
   maxZoneLength: 5000
   resultMeshRenderer: {fileID: 2054185937770208150}
@@ -6412,7 +6412,7 @@ PrefabInstance:
       objectReference: {fileID: 2700835727074630108}
     - target: {fileID: 7526270768739186426, guid: d00a138b0e4f46747a60867274260551, type: 3}
       propertyPath: timeEdgeToPsOff
-      value: 0.01
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 7526270768739186427, guid: d00a138b0e4f46747a60867274260551, type: 3}
       propertyPath: m_Enabled

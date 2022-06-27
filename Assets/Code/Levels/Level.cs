@@ -156,11 +156,13 @@ namespace Code.Levels
         {
             _resultTargetTexture = new Texture2D(baseTex.width, baseTex.height, TextureFormat.ARGB32, true)
             {
-                filterMode = FilterMode.Point
+                filterMode = FilterMode.Point,
+                wrapMode = TextureWrapMode.Mirror
             };
             _resultColbasTexture = new Texture2D(baseTex.width, baseTex.height, TextureFormat.ARGB32, true)
             {
-                filterMode = FilterMode.Point
+                filterMode = FilterMode.Point,
+                wrapMode = TextureWrapMode.Mirror
             };
             _resultColbasTexture.SetPixels(0, 0, _resultColbasTexture.width, _resultColbasTexture.height, Enumerable
                 .Repeat(

@@ -25,7 +25,7 @@ namespace Code
 
         private void Awake()
         {
-            Application.targetFrameRate = 120;
+            Application.targetFrameRate = 150;
             
             
             _levelStorageObject =
