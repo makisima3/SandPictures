@@ -467,6 +467,13 @@ MonoBehaviour:
   resultMeshRenderer: {fileID: 2054185937770208150}
   RowCount: 2
   confetti: {fileID: 5455981259808166037}
+  camera: {fileID: 0}
+  endPoint: {fileID: 0}
+  cameraMoveTime: 1
+  SelectColorHapticType: 0
+  levelEndHapticType: 0
+  levelEndHapticCount: 3
+  levelEndHapticDelay: 0.1
   <MaterialHolder>k__BackingField:
     _uniqueMaterials: []
   OnSpawnStateChange:
@@ -1170,7 +1177,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 6
       minScalar: 0
       maxCurve:
         serializedVersion: 2
