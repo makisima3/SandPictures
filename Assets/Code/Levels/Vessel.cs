@@ -41,11 +41,12 @@ namespace Code.Levels
             _step = distance / initData.Size.x;
         }
 
-        public Tween Move(Vector2Int position, float dropRate, Color color, bool onPS)
+        public Tween Move(Vector2Int position, float dropRate, Color color, int xMax, int xMin)
         {
             var pos = spawnPointView.position;
             pos.x = (pointB.position + Vector3.right * (_step * position.x)).x;
             pos.x = Mathf.Clamp(pos.x, pointB.position.x, pointA.position.x);
+            pos.x = Mathf.Clamp(pos.x, (pointB.position + Vector3.right * (_step * xMin)).x, (pointB.position + Vector3.right * (_step * xMax)).x);
             var time = ExtraMathf.GetTime(Vector3.Distance(spawnPointView.position, pos), dropRate);
 
             if (time < timeEdgeToPsOff)

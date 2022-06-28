@@ -531,10 +531,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1d13ff4d32646d5b7849347c626766e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseTexture: {fileID: 2800000, guid: af37dc72f5e559c43aa507631835ce0b, type: 3}
-  baseTextureView: {fileID: 2800000, guid: af37dc72f5e559c43aa507631835ce0b, type: 3}
+  baseTexture: {fileID: 2800000, guid: b68b5de3a55682147ad9e084f5a54fb5, type: 3}
+  baseTextureView: {fileID: 2800000, guid: b68b5de3a55682147ad9e084f5a54fb5, type: 3}
   vessel: {fileID: 1418953858471844312}
-  dropRate: 80
+  dropRate: 50
   dropGrainTime: 0.1
   newRowReload: 0
   threshold: 0.226
@@ -552,7 +552,7 @@ MonoBehaviour:
   levelEndHapticType: 5
   levelEndHapticCount: 3
   levelEndHapticDelay: 0.2
-  toolOffset: 45
+  toolOffset: 10
   <MaterialHolder>k__BackingField:
     _uniqueMaterials: []
   OnSpawnStateChange:

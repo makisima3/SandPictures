@@ -315,6 +315,8 @@ namespace Code.Levels
                         rowsGroup = rows.Skip(i).Take(RowCount).SelectMany(c => c).OrderBy(c => c.Position.x).ToList();
 
                     var counter = oneStepSpawnGrainsCount;
+                    var xMax = rowsGroup.Max(r => r.Position.x);
+                    var xMin = rowsGroup.Min(r => r.Position.x);
                     for (int j = 0; j < rowsGroup.Count(); j++)
                     {
                         if (!_isSpawn)
@@ -334,7 +336,7 @@ namespace Code.Levels
                         
                         isMoveEnd = false;
                         var offset = _isLeftFirst ? -toolOffset : toolOffset;
-                        vessel.Move(rowsGroup[j].Position + Vector2Int.right * offset, dropRate, _currentMaterial.Color, true)
+                        vessel.Move(rowsGroup[j].Position + Vector2Int.right * offset, dropRate, _currentMaterial.Color, xMax,xMin)
                             .OnComplete(onMoveEnd.Invoke);
 
                         _resultColbasTexture.Apply();
