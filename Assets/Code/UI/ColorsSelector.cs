@@ -32,7 +32,7 @@ namespace Code.UI
                 _buttons.Add(button);
             }
             
-            _buttons.First().SelectColor();
+            //_buttons.First().SelectColor();
         }
 
         public void UnselectButtons(SelectColorButton button)

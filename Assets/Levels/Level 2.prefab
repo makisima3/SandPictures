@@ -531,13 +531,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1d13ff4d32646d5b7849347c626766e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseTexture: {fileID: 2800000, guid: b68b5de3a55682147ad9e084f5a54fb5, type: 3}
-  baseTextureView: {fileID: 2800000, guid: b68b5de3a55682147ad9e084f5a54fb5, type: 3}
+  baseTexture: {fileID: 2800000, guid: b9cf419f26993e34bb728a1f41d438e0, type: 3}
+  baseTextureView: {fileID: 2800000, guid: b9cf419f26993e34bb728a1f41d438e0, type: 3}
   vessel: {fileID: 1418953858471844312}
   dropRate: 50
   dropGrainTime: 0.1
   newRowReload: 0
-  threshold: 0.226
+  threshold: 0.126
   _isLeftFirst: 1
   oneStepSpawnGrainsCount: 16
   toolView: {fileID: 2632544059349357036}
@@ -559,6 +559,8 @@ MonoBehaviour:
   OnSpawnStateChange:
     m_PersistentCalls:
       m_Calls: []
+  fadeForce: 0.7
+  fadeTime: 1.5
 --- !u!1 &4380289726041453325
 GameObject:
   m_ObjectHideFlags: 0

@@ -122,13 +122,17 @@ namespace Code.Levels
             freeColors = _tipColbasTexture.GetPixels();
             
             TipZone();
+            
+            _currentMaterial = MaterialHolder.UniqueMaterials.First();
+            toolView.SetToolPipe(MaterialHolder.UniqueMaterials.First().Color);
         }
 
         public void StartSpawn()
         {
             if (_isEnded)
                 return;
-
+            
+            StopTip();
             _isSpawn = true;
             OnSpawnStateChange.Invoke(_isSpawn);
             spawnCoroutine = StartCoroutine(SpawnV5());
@@ -154,6 +158,7 @@ namespace Code.Levels
             MMVibrationManager.Haptic(SelectColorHapticType);
             _currentMaterial = material;
             toolView.SetToolPipe(material.Color);
+            StopTip();
         }
 
         private int _zoneCounter;
@@ -371,15 +376,19 @@ namespace Code.Levels
         }
 
         private int lastTippedZone = -1;
-
+        private Tween _tween;
+        [SerializeField] private float fadeForce;
+        [SerializeField] private float fadeTime;
         private void TipZone()
         {
             if (lastTippedZone == currentZoneIndex)
                 return;
+            TipMeshRenderer.sharedMaterial.DOFade(0, 0);
+            TipMeshRenderer.gameObject.SetActive(true);
             lastTippedZone = currentZoneIndex;
             tipColors = freeColors;
             var zone = _zones.Skip(currentZoneIndex).First();
-            var color = zone.Key;
+            var color = new Color(1, 1, 1, 1);
             foreach (var cell in zone)
             {
                 tipColors[_resultColbasTexture.width * cell.Position.y + cell.Position.x] = color;
@@ -387,6 +396,16 @@ namespace Code.Levels
 
             _tipColbasTexture.SetPixels(tipColors);
             _tipColbasTexture.Apply();
+
+            _tween = TipMeshRenderer.sharedMaterial.DOFade(fadeForce, fadeTime).SetLoops(-1, LoopType.Yoyo);
+        }
+
+        private void StopTip()
+        {
+            if(_tween != null)
+                _tween.Kill();
+            
+            TipMeshRenderer.gameObject.SetActive(false);
         }
         
         private IEnumerator LevelEndVibration()

@@ -559,6 +559,8 @@ MonoBehaviour:
   OnSpawnStateChange:
     m_PersistentCalls:
       m_Calls: []
+  fadeForce: 0.7
+  fadeTime: 1.5
 --- !u!1 &4380289726041453325
 GameObject:
   m_ObjectHideFlags: 0

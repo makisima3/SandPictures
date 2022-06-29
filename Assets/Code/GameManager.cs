@@ -75,7 +75,8 @@ namespace Code
                 TargetImage = targetImage,
                 LevelCompleteView = levelCompleteView,
                 TutorialView = tutorialView,
-                ColorsSelector = colorsSelector
+                ColorsSelector = colorsSelector,
+                Level = _levelStorageObject.Data.Level
             });
             return spawnedLevel;
         }
