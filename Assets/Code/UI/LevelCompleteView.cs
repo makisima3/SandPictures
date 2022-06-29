@@ -53,6 +53,11 @@ namespace Code.UI
                     nextLevelButton.gameObject.SetActive(true);
                     retryButton.gameObject.SetActive(true);
                 });
+
+            var lvl = PersistentStorage.PersistentStorage.Load<LevelStorageObject, LevelStorageObject.LevelData>(
+                new LevelStorageObject(new LevelStorageObject.LevelData() {Level = 0}));
+            lvl.Data.Level += 1;
+            PersistentStorage.PersistentStorage.Save<LevelStorageObject, LevelStorageObject.LevelData>(lvl);
         }
 
         [ContextMenu("Show")]

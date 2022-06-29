@@ -35,6 +35,7 @@ namespace Code.Levels
         [SerializeField] private ToolView toolView;
         [SerializeField] private int maxZoneLength = 5000;
         [SerializeField] private MeshRenderer resultMeshRenderer;
+        [SerializeField] private MeshRenderer TipMeshRenderer;
         [SerializeField] private int RowCount = 3;
         [SerializeField] private ParticleSystem confetti;
         [SerializeField] private Transform camera;
@@ -52,6 +53,7 @@ namespace Code.Levels
         private List<Color> _uniqueColors;
         private Texture2D _resultTargetTexture;
         private Texture2D _resultColbasTexture;
+        private Texture2D _tipColbasTexture;
         private MaterialHolder.UniqueMaterial _currentMaterial;
         private bool _isSpawn;
         private bool _isEnded;
@@ -66,7 +68,8 @@ namespace Code.Levels
         private UnityEvent onMoveEnd;
         private bool isMoveEnd;
         private int _level;
-
+        private Color[] tipColors;
+        private Color[] freeColors;
         public void Initialize(LevelInitData initData)
         {
             _level = initData.Level;
@@ -116,7 +119,9 @@ namespace Code.Levels
                 firstColor = _uniqueColors.First()
             });
 
-           
+            freeColors = _tipColbasTexture.GetPixels();
+            
+            TipZone();
         }
 
         public void StartSpawn()
@@ -169,8 +174,20 @@ namespace Code.Levels
                 .Repeat(
                     new Color(0, 0, 0, 0), _resultColbasTexture.width * _resultColbasTexture.height).ToArray());
             _resultColbasTexture.Apply();
+            
+            _tipColbasTexture = new Texture2D(baseTex.width, baseTex.height, TextureFormat.ARGB32, true)
+            {
+                filterMode = FilterMode.Point,
+                wrapMode = TextureWrapMode.Mirror
+            };
+            _tipColbasTexture.SetPixels(0, 0, _tipColbasTexture.width, _tipColbasTexture.height, Enumerable
+                .Repeat(
+                    new Color(0, 0, 0, 0), _tipColbasTexture.width * _tipColbasTexture.height).ToArray());
+            _tipColbasTexture.Apply();
+            
 
             resultMeshRenderer.sharedMaterial.mainTexture = _resultColbasTexture;
+            TipMeshRenderer.sharedMaterial.mainTexture = _tipColbasTexture;
             _cells = new Cell[_resultTargetTexture.width, _resultTargetTexture.height];
             _uniqueColors = new List<Color>();
 
@@ -261,7 +278,7 @@ namespace Code.Levels
                 if (isZoneCompleted)
                 {
                     currentZoneIndex += 1;
-
+                    
                     if (currentZoneIndex >= _zones.Count())
                     {
                         _isEnded = true;
@@ -275,9 +292,10 @@ namespace Code.Levels
                         toolView.gameObject.SetActive(false);
                         SoundManager.Instance.StopPlay();
                         StartCoroutine(LevelEndVibration());
+                        TipMeshRenderer.gameObject.SetActive(false);
                         yield break;
                     }
-
+                    TipZone();
                     if (_zones.Skip(currentZoneIndex).First().First().Color !=
                         _zones.Skip(currentZoneIndex - 1).First().First().Color)
                     {
@@ -299,6 +317,8 @@ namespace Code.Levels
                     .OrderBy(c => c.Key)
                     .ToArray();
 
+                
+                
                 Vector2Int lastCell = Vector2Int.zero;
                 for (int i = 0; i < rows.Length; i += RowCount)
                 {
@@ -350,6 +370,25 @@ namespace Code.Levels
             }
         }
 
+        private int lastTippedZone = -1;
+
+        private void TipZone()
+        {
+            if (lastTippedZone == currentZoneIndex)
+                return;
+            lastTippedZone = currentZoneIndex;
+            tipColors = freeColors;
+            var zone = _zones.Skip(currentZoneIndex).First();
+            var color = zone.Key;
+            foreach (var cell in zone)
+            {
+                tipColors[_resultColbasTexture.width * cell.Position.y + cell.Position.x] = color;
+            }
+
+            _tipColbasTexture.SetPixels(tipColors);
+            _tipColbasTexture.Apply();
+        }
+        
         private IEnumerator LevelEndVibration()
         {
             for (int i = 0; i < levelEndHapticCount; i++)
