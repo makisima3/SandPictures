@@ -23,7 +23,6 @@ namespace Code.Levels
         }
 
         [SerializeField] private Texture2D baseTexture;
-        [SerializeField] private Texture2D baseTextureView;
         [SerializeField] private Vessel vessel;
 
         [SerializeField] private float dropRate = 0.5f;
@@ -46,19 +45,20 @@ namespace Code.Levels
         [SerializeField] private int levelEndHapticCount = 3;
         [SerializeField] private float levelEndHapticDelay = 0.1f;
         [SerializeField] private int toolOffset;
+        [SerializeField] private Material baseMaterial;
         private ColorsSelector _colorsSelector;
         private TutorialView tutorialView;
         private Coroutine spawnCoroutine;
         private Cell[,] _cells;
         private List<Color> _uniqueColors;
-        private Texture2D _resultTargetTexture;
-        private Texture2D _resultColbasTexture;
-        private Texture2D _tipColbasTexture;
+        [SerializeField]private Texture2D _resultTargetTexture;
+        [SerializeField]private Texture2D _resultColbasTexture;
+        [SerializeField]private Texture2D _tipColbasTexture;
         private MaterialHolder.UniqueMaterial _currentMaterial;
         private bool _isSpawn;
         private bool _isEnded;
         private LevelCompleteView _levelCompleteView;
-        private IOrderedEnumerable<IGrouping<Color, Cell>> _zones;
+        [SerializeField]private IOrderedEnumerable<IGrouping<Color, Cell>> _zones;
         private int currentZoneIndex = 0;
         private Image _targetImage;
         [field: SerializeField] public MaterialHolder MaterialHolder { get; private set; }
@@ -74,34 +74,35 @@ namespace Code.Levels
         {
             _level = initData.Level;
             _colorsSelector = initData.ColorsSelector;
-            MaterialHolder = new MaterialHolder();
             _levelCompleteView = initData.LevelCompleteView;
             tutorialView = initData.TutorialView;
             _targetImage = initData.TargetImage;
+            
             onMoveEnd = new UnityEvent();
             onMoveEnd.AddListener(() => isMoveEnd = true);
+            
+            //MaterialHolder = new MaterialHolder();
             GetCells(baseTexture);
+            
             _targetImage.sprite = Sprite
-                .Create(baseTextureView, new Rect(0f, 0f, _resultTargetTexture.width, _resultTargetTexture.height),
+                .Create(baseTexture, new Rect(0f, 0f, _resultTargetTexture.width, _resultTargetTexture.height),
                     Vector2.one / 2);
+            
+            foreach (var color in MaterialHolder._uniqueColors)
+            {
+                var material = new Material(initData.BaseMaterial)
+                {
+                    color = color.Color
+                };
 
-            int id = 0;
+                MaterialHolder.Register(new MaterialHolder.UniqueMaterial(color.Id, material));
+                
+            }
             _zones = _cells
                 .Cast<Cell>()
                 .Where(c => !c.IsEmpty)
                 .GroupBy(c => c.Color)
-                .OrderBy(z => z.Sum(c => c.Position.y) / z.Count());
-
-            foreach (var color in _zones)
-            {
-                var material = new Material(initData.BaseMaterial)
-                {
-                    color = color.Key,
-                };
-
-                MaterialHolder.Register(new MaterialHolder.UniqueMaterial(id, material));
-                id++;
-            }
+                .OrderBy(c => MaterialHolder.GetMaterialID(c.Key));
 
 
             vessel.Initialize(new VesselInitData()
@@ -127,6 +128,25 @@ namespace Code.Levels
             toolView.SetToolPipe(MaterialHolder.UniqueMaterials.First().Color);
         }
 
+        [ContextMenu("PreInit")]
+        private void PreInit()
+        {
+            MaterialHolder = new MaterialHolder();
+            GetCells(baseTexture);
+            _zones = _cells
+                .Cast<Cell>()
+                .Where(c => !c.IsEmpty)
+                .GroupBy(c => c.Color)
+                .OrderBy(z => z.Sum(c => c.Position.y) / z.Count());
+            MaterialHolder._uniqueColors = new List<MaterialHolder.UniqueColor>();
+            int id = 0;
+            foreach (var color in _zones)
+            {
+                MaterialHolder._uniqueColors.Add(new MaterialHolder.UniqueColor(id, color.Key));
+                id++;
+            }
+        }
+        
         public void StartSpawn()
         {
             if (_isEnded)

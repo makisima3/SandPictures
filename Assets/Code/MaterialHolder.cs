@@ -11,8 +11,8 @@ namespace Code
         [Serializable]
         public class UniqueMaterial
         {
-            [field: SerializeField] public int Id { get; }
-            [field: SerializeField] public Material Material { get; }
+            [field: SerializeField] public int Id { get; set; }
+            [field: SerializeField] public Material Material { get; set; }
             
             public Color Color => Material.color;
 
@@ -22,9 +22,24 @@ namespace Code
                 Material = material;
             }
         }
+        
+        [Serializable]
+        public class UniqueColor
+        {
+            [field: SerializeField] public int Id { get; set; }
+            [field: SerializeField] public Color Color { get; set; }
+
+            public UniqueColor(int id, Color color)
+            {
+                Id = id;
+                Color = color;
+            }
+        }
+        
 
         [SerializeField] private List<UniqueMaterial> _uniqueMaterials;
-
+        [SerializeField] public List<UniqueColor> _uniqueColors;
+        
         public UniqueMaterial[] UniqueMaterials => _uniqueMaterials.ToArray();
 
         public MaterialHolder()
@@ -35,6 +50,11 @@ namespace Code
         public Material GetMaterial(int id)
         {
             return _uniqueMaterials.FirstOrDefault(m => m.Id == id)?.Material;
+        }
+        
+        public int? GetMaterialID(Color color)
+        {
+            return _uniqueMaterials.FirstOrDefault(m => m.Color == color)?.Id;
         }
 
         public void Register(UniqueMaterial uniqueMaterial)

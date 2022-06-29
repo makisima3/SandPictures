@@ -18,7 +18,7 @@ namespace Code.UI
         {
             _buttons = new List<SelectColorButton>();
             
-            foreach (var uniqueMaterial in initData.Level.MaterialHolder.UniqueMaterials)
+            foreach (var uniqueMaterial in initData.Level.MaterialHolder.UniqueMaterials.OrderBy(c => c.Id))
             {
                 var button = initData.UIFactory.Create<SelectColorButton, SelectColorButtonInitData>(
                     new SelectColorButtonInitData()
