@@ -5,6 +5,7 @@ using Code.Levels;
 using Code.StoragesObjects;
 using Code.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Code
@@ -20,13 +21,15 @@ namespace Code
         [SerializeField] private Material grainBaseMaterial;
         [SerializeField] private LevelCompleteView levelCompleteView;
         [SerializeField] private TutorialView tutorialView;
+        [SerializeField] private Button restartButton;
         
         private LevelStorageObject _levelStorageObject;
 
         private void Awake()
         {
             Application.targetFrameRate = 150;
-            
+
+            restartButton.onClick.AddListener(Restart);
             
             _levelStorageObject =
                 PersistentStorage.PersistentStorage.Load<LevelStorageObject, LevelStorageObject.LevelData>(
@@ -79,6 +82,11 @@ namespace Code
                 Level = _levelStorageObject.Data.Level
             });
             return spawnedLevel;
+        }
+
+        private void Restart()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }
