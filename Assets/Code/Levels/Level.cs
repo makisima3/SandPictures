@@ -46,6 +46,9 @@ namespace Code.Levels
         [SerializeField] private float levelEndHapticDelay = 0.1f;
         [SerializeField] private int toolOffset;
         [SerializeField] private Material baseMaterial;
+        [SerializeField] private Transform bottomCollider;
+        [SerializeField] private float offset;
+        
         private ColorsSelector _colorsSelector;
         private TutorialView tutorialView;
         private Coroutine spawnCoroutine;
@@ -359,6 +362,10 @@ namespace Code.Levels
                     else
                         rowsGroup = rows.Skip(i).Take(RowCount).SelectMany(c => c).OrderBy(c => c.Position.x).ToList();
 
+                    var pos = bottomCollider.transform.position;
+                    pos.y = rowsGroup.First().Position.y * offset;
+                    bottomCollider.transform.position = pos;
+                    
                     var counter = oneStepSpawnGrainsCount;
                     var xMax = rowsGroup.Max(r => r.Position.x);
                     var xMin = rowsGroup.Min(r => r.Position.x);
