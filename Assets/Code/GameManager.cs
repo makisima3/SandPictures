@@ -25,10 +25,14 @@ namespace Code
         
         private LevelStorageObject _levelStorageObject;
 
+        public List<int> StoredChunks;
+
         private void Awake()
         {
             Application.targetFrameRate = 150;
 
+            StoredChunks = GatherStoredChunks();
+            
             restartButton.onClick.AddListener(Restart);
             
             _levelStorageObject =
@@ -87,6 +91,58 @@ namespace Code
         private void Restart()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        private const string LevelDirectoryName = "Levels";
+        private const string LevelsRegistryFileName = "LevelsRegistry";
+        public virtual List<int> GatherStoredChunks()
+        {
+            var list = new List<int>();
+
+            var levelsRegistry = Resources.Load<TextAsset>($"{LevelDirectoryName}/{LevelsRegistryFileName}");
+
+            if (levelsRegistry == null)
+            {
+                return new List<int>();
+            }
+           
+           
+            /* var chunkDirectory = GetChunkSaveFolder();
+             if (!System.IO.Directory.Exists(chunkDirectory))
+             {
+                 System.IO.Directory.CreateDirectory(chunkDirectory);
+                 return list;
+             }*/
+
+            //var files = System.IO.Directory.GetFiles(chunkDirectory);
+            foreach (var levelIndex in levelsRegistry.text.Split(','))
+            {
+                var parsedIndex = int.TryParse(levelIndex, out int index);
+                
+                if(!parsedIndex)
+                    continue;
+
+                list.Add(index);
+                
+                /* var filename = System.IO.Path.GetFileNameWithoutExtension(file);
+                 var positions = filename.Split('_');
+ 
+                 if (positions.Length < 2)
+                 {
+                     continue;
+                 }
+ 
+                 var parsed_x = int.TryParse(positions[0], out int x_pos);
+                 var parsed_y = int.TryParse(positions[1], out int y_pos);
+ 
+                 if (!parsed_x || !parsed_y)
+                 {
+                     continue;
+                 }
+ 
+                 list.Add(new int2(x_pos, y_pos));*/
+            }
+
+            return list;
         }
     }
 }

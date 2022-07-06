@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 362b9e518144fb34fbc2093609139a6d, type: 3}
+  m_Name: WoodDust
+  m_EditorClassIdentifier: 
+  nameKey: Sawdust
+  descKey: Very gradular wood.
+  ShowInPicker: 1
+  Id: 12
+  Metadata:
+    FluidType: 2
+    Color: {r: 0.21586053, g: 0.06124607, b: 0.010960094, a: 1}
+    temperature: 0
+    hasSolidCollision: 0
+    spreadsInWater: 0
+    createsFromThinAir: 0
+    MaxTemperature: 1
+    MinTemperature: 0
+    MaxTemperatureBecomes: 16
+    MinTemperatureBecomes: 0
+  OnStamp: {fileID: 8300000, guid: 838688bf60cc22b478c681fc96960e84, type: 3}
+  OnTempHigh: {fileID: 8300000, guid: fb5f0d3628da77a4d9827fd86c674a9e, type: 3}
+  OnTempLow: {fileID: 0}
+  Icon: {fileID: 21300000, guid: 7d284775bb849794f83b54df08e00005, type: 3}
+  listBias: 0

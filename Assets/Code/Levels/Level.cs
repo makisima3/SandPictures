@@ -5,9 +5,11 @@ using System.Linq;
 using Code.InitDatas;
 using Code.UI;
 using Code.Utils;
+using CorgiFallingSands;
 using DG.Tweening;
 using MoreMountains.NiceVibrations;
 using Plugins.SimpleFactory;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -48,6 +50,8 @@ namespace Code.Levels
         [SerializeField] private Material baseMaterial;
         [SerializeField] private Transform bottomCollider;
         [SerializeField] private float offset;
+        [SerializeField] private int chunk;
+        [SerializeField] private FallingSandsStorageManager FallingSandsStorageManager;
         
         private ColorsSelector _colorsSelector;
         private TutorialView tutorialView;
@@ -149,7 +153,7 @@ namespace Code.Levels
                 id++;
             }
         }
-        
+
         public void StartSpawn()
         {
             if (_isEnded)

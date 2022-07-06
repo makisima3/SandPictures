@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 362b9e518144fb34fbc2093609139a6d, type: 3}
+  m_Name: Gravel
+  m_EditorClassIdentifier: 
+  nameKey: Gravel
+  descKey: Broken up stone.
+  ShowInPicker: 1
+  Id: 25
+  Metadata:
+    FluidType: 2
+    Color: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 1}
+    temperature: 0
+    hasSolidCollision: 1
+    spreadsInWater: 0
+    createsFromThinAir: 0
+    MaxTemperature: 6
+    MinTemperature: 0
+    MaxTemperatureBecomes: 16
+    MinTemperatureBecomes: 0
+  OnStamp: {fileID: 8300000, guid: 838688bf60cc22b478c681fc96960e84, type: 3}
+  OnTempHigh: {fileID: 8300000, guid: 17779a22742aba04ea55cf915c5a219f, type: 3}
+  OnTempLow: {fileID: 0}
+  Icon: {fileID: 21300000, guid: fa4e9e5b491851b48865964ff545ff0a, type: 3}
+  listBias: -1

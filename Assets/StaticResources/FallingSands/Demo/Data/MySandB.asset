@@ -15,7 +15,7 @@ MonoBehaviour:
   nameKey: MySandB
   descKey: Very gradular stone.
   ShowInPicker: 1
-  Id: 28
+  Id: 27
   Metadata:
     FluidType: 2
     Color: {r: 0, g: 0.55032945, b: 1, a: 1}

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 362b9e518144fb34fbc2093609139a6d, type: 3}
+  m_Name: Steam
+  m_EditorClassIdentifier: 
+  nameKey: Steam
+  descKey: Very hot water.
+  ShowInPicker: 0
+  Id: 6
+  Metadata:
+    FluidType: 4
+    Color: {r: 0.16803133, g: 0.19489217, b: 0.6037736, a: 0.6313726}
+    temperature: 1
+    hasSolidCollision: 0
+    spreadsInWater: 0
+    createsFromThinAir: 0
+    MaxTemperature: 0
+    MinTemperature: -1
+    MaxTemperatureBecomes: 0
+    MinTemperatureBecomes: 9
+  OnStamp: {fileID: 8300000, guid: 838688bf60cc22b478c681fc96960e84, type: 3}
+  OnTempHigh: {fileID: 0}
+  OnTempLow: {fileID: 0}
+  Icon: {fileID: 21300000, guid: f952d9a3186e8eb4bb6ac2c5620ac10a, type: 3}
+  listBias: 0

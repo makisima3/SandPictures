@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 362b9e518144fb34fbc2093609139a6d, type: 3}
+  m_Name: FireSpout
+  m_EditorClassIdentifier: 
+  nameKey: Fire Spout
+  descKey: Emis fire.
+  ShowInPicker: 1
+  Id: 20
+  Metadata:
+    FluidType: 1
+    Color: {r: 0.62352943, g: 0.16862744, b: 0.16862744, a: 1}
+    temperature: 10
+    hasSolidCollision: 0
+    spreadsInWater: 0
+    createsFromThinAir: 1
+    MaxTemperature: 0
+    MinTemperature: 0
+    MaxTemperatureBecomes: 0
+    MinTemperatureBecomes: 0
+  OnStamp: {fileID: 8300000, guid: 5d6bbfbbbdf5c5f4c88538cb6f89e6aa, type: 3}
+  OnTempHigh: {fileID: 8300000, guid: 16f326741c5e211428425f5e602b4810, type: 3}
+  OnTempLow: {fileID: 8300000, guid: 816f72fbeb95b7c45a2fa9db201c2dd7, type: 3}
+  Icon: {fileID: 21300000, guid: 965a1f57cdb7bed428f43c940f86f780, type: 3}
+  listBias: -1
