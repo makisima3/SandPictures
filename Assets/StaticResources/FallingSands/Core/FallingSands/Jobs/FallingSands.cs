@@ -126,7 +126,7 @@ namespace CorgiFallingSands
             FallingData toData = Data[toIndex];
             var toDataType = toData.GetDataType();
 
-            if (toDataType == FallingDataType.Water)
+            if (toDataType == (int)FallingDataType.Water)
             {
                 Data[toIndex] = new FallingData(fromData.GetDataType());
                 TrackedChanges[toIndex] = true;
@@ -145,7 +145,7 @@ namespace CorgiFallingSands
                 return false;
             }
 
-            var createData = new FallingData(meta.createsFromThinAir);
+            var createData = new FallingData((int)meta.createsFromThinAir);
 
             CreateFromThinAir(id + new int2(+0, -1), createData);
             CreateFromThinAir(id + new int2(+0, +1), createData);
@@ -168,7 +168,7 @@ namespace CorgiFallingSands
             FallingData toData = Data[toIndex];
             var toDataType = toData.GetDataType();
 
-            if (toDataType == FallingDataType.Air)
+            if (toDataType == 0)
             {
                 Data[toIndex] = createData;
                 TrackedChanges[toIndex] = true;
@@ -207,7 +207,7 @@ namespace CorgiFallingSands
             var fromIsPowder = fromMetadata.FluidType == FallingDataFluidType.Sand || fromMetadata.FluidType == FallingDataFluidType.Gas;
             var toIsFluid = toMetadata.FluidType == FallingDataFluidType.Fluid;
 
-            if ((fromIsPowder && toIsFluid) || toDataType == FallingDataType.Air)
+            if ((fromIsPowder && toIsFluid) || toDataType == 0)
             {
                 Data[toIndex] = new FallingData(fromData.GetDataType());
                 Data[fromIndex] = new FallingData(toData.GetDataType());
@@ -240,7 +240,7 @@ namespace CorgiFallingSands
                 TrackedChanges[index] = true;
 
                 var newData = fromData;
-                newData = new FallingData(metadata.MinTemperatureBecomes);
+                newData = new FallingData((int)metadata.MinTemperatureBecomes);
 
                 Data[index] = newData;
 
@@ -265,7 +265,7 @@ namespace CorgiFallingSands
                 TrackedChanges[index] = true;
 
                 var newData = fromData;
-                newData = new FallingData(metadata.MaxTemperatureBecomes);
+                newData = new FallingData((int)metadata.MaxTemperatureBecomes);
 
                 Data[index] = newData;
 

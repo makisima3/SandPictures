@@ -14,7 +14,7 @@ namespace CorgiFallingSands
 
         public void Execute(int index)
         {
-            Data[index] = new FallingData(FallingDataType.Air);
+            Data[index] = new FallingData(0);
         }
     }
 

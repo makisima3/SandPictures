@@ -22,28 +22,28 @@ namespace CorgiFallingSands
             int2 positionWithinChunk = MathE.Get1DTo2D(index, resolution.x, resolution.y);
             int2 positionWithinWorld = ChunkPosition + positionWithinChunk;
 
-            var targetType = FallingDataType.Air;
+            var targetType = 0;
 
             var groundOffset = math.sin((positionWithinWorld.x + positionWithinWorld.y) * 0.01f) * 10;
             
             if (positionWithinWorld.y + groundOffset < 0)
             {
-                targetType = FallingDataType.Grass;
+                targetType = (int)FallingDataType.Grass;
             }
             
             if (positionWithinWorld.y + groundOffset < -4)
             {
-                targetType = FallingDataType.Dirt;
+                targetType = (int)FallingDataType.Dirt;
             }
 
             if(positionWithinWorld.y + groundOffset < -16)
             {
-                targetType = FallingDataType.Stone;
+                targetType = (int)FallingDataType.Stone;
             }
 
             if(positionWithinWorld.y + groundOffset < -256)
             {
-                targetType = FallingDataType.Bedrock;
+                targetType = (int)FallingDataType.Bedrock;
             }
 
             // examples of some more complex stuff 

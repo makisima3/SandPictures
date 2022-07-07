@@ -13,7 +13,7 @@ namespace CorgiFallingSands
         public bool ShowInPicker;
 
         // for physics 
-        public FallingDataType Id;
+        public int Id;
         public FallingDataMetadata Metadata;
 
         // for vfx/sfx

@@ -5,14 +5,14 @@ namespace CorgiFallingSands
     {
         private float data;
 
-        public FallingData(FallingDataType dataType)
+        public FallingData(int dataType)
         {
             data = (float) (int) dataType;
         }
 
-        public FallingDataType GetDataType()
+        public int GetDataType()
         {
-            return (FallingDataType) (int) data; 
+            return (int) data; 
         }
 
         public static implicit operator float(FallingData d)
@@ -22,7 +22,7 @@ namespace CorgiFallingSands
 
         public static implicit operator FallingData(float f)
         {
-            return new FallingData((FallingDataType) f);
+            return new FallingData((int) f);
         }
     }
 }

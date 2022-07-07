@@ -28,13 +28,13 @@ namespace CorgiFallingSands
             }
         }
 
-        public FallingSandsDataObj FindDataObjectFromId(FallingDataType id)
+        public FallingSandsDataObj FindDataObjectFromId(int id)
         {
             var count = DataObjects.Count;
             for (var i = 0; i < count; ++i)
             {
                 var data = DataObjects[i];
-                if (data.Id == id)
+                if ((int)data.Id == id)
                 {
                     return data;
                 }

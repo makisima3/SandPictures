@@ -89,12 +89,12 @@ namespace Code.UI
         {
             if (!isFirstShown)
             {
-                _selector.Buttons.First().SelectColor();
+                //_selector.Buttons.First().SelectColor();
                 ShowV2();
             }
             else if (isFirstShown && isShowV3)
             {
-                _selector.Buttons.Skip(1).First().SelectColor();
+                //_selector.Buttons.Skip(1).First().SelectColor();
                 Hide();
             }
             else

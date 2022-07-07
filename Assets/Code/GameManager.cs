@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Code.Factories;
 using Code.InitDatas;
 using Code.Levels;
 using Code.StoragesObjects;
 using Code.UI;
+using MoreMountains.NiceVibrations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -22,9 +24,10 @@ namespace Code
         [SerializeField] private LevelCompleteView levelCompleteView;
         [SerializeField] private TutorialView tutorialView;
         [SerializeField] private Button restartButton;
+        [SerializeField] private Button levelEndButton;
         
         private LevelStorageObject _levelStorageObject;
-
+        private Level level;
         public List<int> StoredChunks;
 
         private void Awake()
@@ -46,7 +49,7 @@ namespace Code
                     _levelStorageObject);
             }
 
-            var level = LoadLevel();
+            level = LoadLevel();
             colorsSelector.Initialize(new ColorsSelectorInitData()
             {
                 Level = level,
@@ -68,6 +71,8 @@ namespace Code
             {
                 tutorialView.Show();
             }
+            
+            levelEndButton.onClick.AddListener(level.LevelEnd);
         }
 
         private Level LoadLevel()
@@ -144,5 +149,7 @@ namespace Code
 
             return list;
         }
+
+      
     }
 }

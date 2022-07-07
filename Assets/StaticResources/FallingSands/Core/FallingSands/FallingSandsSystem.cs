@@ -59,7 +59,7 @@ namespace CorgiFallingSands
         [System.NonSerialized] private NativeArray<FallingDataMetadata> _nativeMetadata;
         [System.NonSerialized] private Material rendererMaterial;
         [System.NonSerialized] private bool _pausePhysics;
-        [System.NonSerialized] private Dictionary<FallingDataType, float> _eventHandleCache = new Dictionary<FallingDataType, float>();
+        [System.NonSerialized] private Dictionary<int, float> _eventHandleCache = new Dictionary<int, float>();
 
         [System.NonSerialized] private NativeList<int2> _sampleRequests;
         [System.NonSerialized] private NativeList<SampleData> _sampleResults;
@@ -608,7 +608,7 @@ namespace CorgiFallingSands
             }
 
 
-            var fromData = FallingSandsDataManager.Instance.FindDataObjectFromId(fromId);
+            var fromData = FallingSandsDataManager.Instance.FindDataObjectFromId((int)fromId);
 
             if (data.temperature > fromData.Metadata.MaxTemperature && fromData.OnTempHigh != null)
             {

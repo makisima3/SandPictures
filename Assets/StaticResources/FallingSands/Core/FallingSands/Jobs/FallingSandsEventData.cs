@@ -4,8 +4,8 @@ namespace CorgiFallingSands
     public struct FallingSandsEventData
     {
         public int index;
-        public FallingDataType id_a;
-        public FallingDataType id_b;
+        public int id_a;
+        public int id_b;
         public float temperature;
     }
 }

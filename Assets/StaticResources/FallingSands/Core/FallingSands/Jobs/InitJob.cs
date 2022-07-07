@@ -24,13 +24,13 @@ namespace CorgiFallingSands
             // floor 
             if (pos.y == 0)
             {
-                DataOut[index] = new FallingData(FallingDataType.Stone);
+                DataOut[index] = new FallingData((int)FallingDataType.Stone);
             }
 
             // walls 
             if (pos.x == 0 || pos.x == textureWidth - 1)
             {
-                DataOut[index] = new FallingData(FallingDataType.Stone);
+                DataOut[index] = new FallingData((int)FallingDataType.Stone);
             }
         }
     }

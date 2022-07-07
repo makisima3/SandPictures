@@ -3,7 +3,7 @@ namespace CorgiFallingSands
     [System.Serializable]
     public struct SampleData
     {
-        public FallingDataType id;
+        public int id;
         public float temp;
     }
 }

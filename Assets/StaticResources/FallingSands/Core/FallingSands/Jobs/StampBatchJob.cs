@@ -41,7 +41,7 @@ namespace CorgiFallingSands
                     if(!stampData.overwriteAnything)
                     {
                         FallingData prevData = DataIn[index];
-                        if(prevData.GetDataType() != FallingDataType.Air)
+                        if(prevData.GetDataType() != 0)
                         {
                             continue;
                         }

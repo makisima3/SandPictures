@@ -60,7 +60,7 @@ namespace CorgiFallingSands
                     for (var i = 0; i < instance.DataObjects.Count; ++i)
                     {
                         var data = instance.DataObjects[i];
-                        data.Id = (FallingDataType)i;
+                        data.Id = (int)i;
 
                         EditorUtility.SetDirty(data);
 

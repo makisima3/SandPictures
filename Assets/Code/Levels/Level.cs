@@ -52,6 +52,7 @@ namespace Code.Levels
         [SerializeField] private float offset;
         [SerializeField] private int chunk;
         [SerializeField] private FallingSandsStorageManager FallingSandsStorageManager;
+        [SerializeField] private GameObject panel;
         
         private ColorsSelector _colorsSelector;
         private TutorialView tutorialView;
@@ -61,6 +62,13 @@ namespace Code.Levels
         [SerializeField]private Texture2D _resultTargetTexture;
         [SerializeField]private Texture2D _resultColbasTexture;
         [SerializeField]private Texture2D _tipColbasTexture;
+        [SerializeField] private FallingSandsDataObj fallingSandsDataObjPrefabAir;
+        [SerializeField] private FallingSandsDataObj fallingSandsDataObjPrefabBad;
+        [SerializeField] private FallingSandsDataObj fallingSandsDataObjPrefab;
+        [SerializeField] private bool isInEditor;
+
+        [SerializeField] private Camera resultCameraRenderer;
+        
         private MaterialHolder.UniqueMaterial _currentMaterial;
         private bool _isSpawn;
         private bool _isEnded;
@@ -95,6 +103,11 @@ namespace Code.Levels
                 .Create(baseTexture, new Rect(0f, 0f, _resultTargetTexture.width, _resultTargetTexture.height),
                     Vector2.one / 2);
             
+           
+
+            var objs = new List<FallingSandsDataObj>();
+
+            int counter = 2;
             foreach (var color in MaterialHolder._uniqueColors)
             {
                 var material = new Material(initData.BaseMaterial)
@@ -102,9 +115,33 @@ namespace Code.Levels
                     color = color.Color
                 };
 
+                var newPrefab = new FallingSandsDataObj();
+                newPrefab.descKey = fallingSandsDataObjPrefab.descKey;
+                newPrefab.nameKey = fallingSandsDataObjPrefab.nameKey;
+                newPrefab.Icon = fallingSandsDataObjPrefab.Icon;
+                newPrefab.Id = fallingSandsDataObjPrefab.Id;
+                newPrefab.listBias = fallingSandsDataObjPrefab.listBias;
+                newPrefab.Metadata = fallingSandsDataObjPrefab.Metadata;
+                newPrefab.OnStamp = fallingSandsDataObjPrefab.OnStamp;
+                newPrefab.OnTempHigh = fallingSandsDataObjPrefab.OnTempHigh;
+                newPrefab.OnTempLow = fallingSandsDataObjPrefab.OnTempLow;
+                newPrefab.ShowInPicker = fallingSandsDataObjPrefab.ShowInPicker;
+                
+                
+
+                newPrefab.Metadata.Color = color.Color;
+                newPrefab.Id = counter;
+                counter++;
+                objs.Add(newPrefab);
                 MaterialHolder.Register(new MaterialHolder.UniqueMaterial(color.Id, material));
                 
             }
+            
+            FallingSandsDataManager.Instance.DataObjects.Clear();
+            FallingSandsDataManager.Instance.DataObjects.Add(fallingSandsDataObjPrefabAir);
+            FallingSandsDataManager.Instance.DataObjects.Add(fallingSandsDataObjPrefabBad);
+            FallingSandsDataManager.Instance.DataObjects.AddRange(objs);
+            
             _zones = _cells
                 .Cast<Cell>()
                 .Where(c => !c.IsEmpty)
@@ -112,7 +149,7 @@ namespace Code.Levels
                 .OrderBy(c => MaterialHolder.GetMaterialID(c.Key));
 
 
-            vessel.Initialize(new VesselInitData()
+           /* vessel.Initialize(new VesselInitData()
             {
                 WorldFactory = initData.WorldFactory,
                 DropGrainTime = dropGrainTime,
@@ -132,7 +169,7 @@ namespace Code.Levels
             TipZone();
             
             _currentMaterial = MaterialHolder.UniqueMaterials.First();
-            toolView.SetToolPipe(MaterialHolder.UniqueMaterials.First().Color);
+            toolView.SetToolPipe(MaterialHolder.UniqueMaterials.First().Color);*/
         }
 
         [ContextMenu("PreInit")]
@@ -286,17 +323,63 @@ namespace Code.Levels
         public float CompareResult()
         {
             var correctGrainsCount = 0f;
-
+            var texture = RTImage();
+            
             for (int x = 0; x < _resultTargetTexture.width; x++)
             {
                 for (int y = 0; y < _resultTargetTexture.height; y++)
                 {
-                    if (_resultTargetTexture.GetPixel(x, y) == _resultColbasTexture.GetPixel(x, y))
+                    var c = texture.GetPixel(x, y);
+                    
+                    if(c.a <=0 || c == Color.black)
+                        continue;
+                    
+                    if (_resultTargetTexture.GetPixel(x, y).ToVector4().DistanceTo(texture.GetPixel(x, y).ToVector4()) <= threshold )
                         correctGrainsCount++;
                 }
             }
 
             return correctGrainsCount / (_resultTargetTexture.width * _resultTargetTexture.height);
+        }
+
+        private Texture2D RTImage()
+        {
+            resultCameraRenderer.gameObject.SetActive(true);
+            Rect rect = new Rect(0, 0, _resultTargetTexture.width, _resultTargetTexture.height);
+            RenderTexture renderTexture = new RenderTexture(_resultTargetTexture.width, _resultTargetTexture.height, 24);
+            Texture2D screenShot = new Texture2D(_resultTargetTexture.width, _resultTargetTexture.height, TextureFormat.RGBA32, false);
+ 
+            resultCameraRenderer.targetTexture = renderTexture;
+            resultCameraRenderer.Render();
+ 
+            RenderTexture.active = renderTexture;
+            screenShot.ReadPixels(rect, 0, 0);
+ 
+            resultCameraRenderer.targetTexture = null;
+            RenderTexture.active = null;
+ 
+            Destroy(renderTexture);
+            renderTexture = null;
+            
+            resultCameraRenderer.gameObject.SetActive(false);
+            return screenShot;
+        }
+        
+        public void LevelEnd()
+        {
+            panel.gameObject.SetActive(false);
+            _isEnded = true;
+            confetti.Play();
+            var percetn = CompareResult();
+            _levelCompleteView.Show(percetn);
+            camera.DOMove(endPoint.position, cameraMoveTime);
+            camera.DORotateQuaternion(endPoint.rotation, cameraMoveTime);
+            _isSpawn = false;
+            _colorsSelector.gameObject.SetActive(false);
+            toolView.gameObject.SetActive(false);
+            SoundManager.Instance.StopPlay();
+            StartCoroutine(LevelEndVibration());
+            TipMeshRenderer.gameObject.SetActive(false);
         }
         
         private IEnumerator SpawnV5()
