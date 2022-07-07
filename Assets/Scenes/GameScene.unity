@@ -4412,7 +4412,6 @@ MonoBehaviour:
   _inputCatcher: {fileID: 615307457}
   levels:
   - {fileID: 4334998559187529135, guid: 8de7e59b2a776d54ba86a5f1ea9b3015, type: 3}
-  - {fileID: 4334998559187529135, guid: 70542fbf5923e0f4894abc47a373d3b0, type: 3}
   worldFactory: {fileID: 1152896155}
   uiFactory: {fileID: 1152896157}
   colorsSelector: {fileID: 683428147}
