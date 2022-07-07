@@ -1,3 +1,6 @@
+using Code;
+using Code.InitDatas;
+
 namespace CorgiFallingSands
 {
     using System.Collections;
@@ -12,13 +15,15 @@ namespace CorgiFallingSands
         public FallingSandsMouseWriter mouseWriter;
         public SimpleAudioPlayer ourAudioPlayer;
 
-        public GameObject PrefabButton;
+        public ChangeSandButton PrefabButton;
         public GameObject PrefabSeparator;
         public Transform ButtonParentTransform;
         public TMP_Text StampSizeLabel;
         public TMP_Text StampLabel;
         public TMP_Text StampDescLabel;
         public Button StampButton;
+
+        private List<ChangeSandButton> _changeSandButtons;
 
         [System.Serializable]
         public class UiGroup
@@ -32,6 +37,8 @@ namespace CorgiFallingSands
         private void Start()
         {
             InitUI();
+
+            
         }
 
         private Transform GetUiGroupParent(FallingDataFluidType fluidType)
@@ -95,20 +102,35 @@ namespace CorgiFallingSands
                 //     separatorLabel.text = GetNameKeyFromFluidType(previousFluidType);
                 // }
 
-                var newButtonGo = GameObject.Instantiate(PrefabButton, parent);
-                var newButton = newButtonGo.GetComponent<Button>();
+                var newButtonGo = GameObject.Instantiate(PrefabButton.gameObject, parent);
+                var newButton = newButtonGo.GetComponent<ChangeSandButton>();
 
                 var newIcon = newButtonGo.transform.Find("Icon").GetComponent<Image>();
                 newIcon.sprite = data.Icon;
 
-                var newImage = newButton.image;
+                var newImage = newButton.ColorImage;
                 newImage.color = Color.Lerp(data.Metadata.Color, Color.white, 0.5f); // desaturate 
 
                 var newText = newButton.GetComponentInChildren<TMPro.TMP_Text>(true);
                 newText.text = data.nameKey;
 
-                newButton.onClick.RemoveAllListeners();
-                newButton.onClick.AddListener(() =>
+                //newButton.Button.onClick.RemoveAllListeners();
+                newButton.Initialize(new ChangeSandButtonInitData()
+                {
+                    OnClickAction = () =>
+                    {
+                        mouseWriter.ChangeStampData(data);
+
+                        ourAudioPlayer.PlaySoundBurst(ourAudioPlayer.AudioSelectMaterial);
+                    },
+                    OnSelect = Unselect,
+                });
+              
+                _changeSandButtons ??= new List<ChangeSandButton>();
+                
+                _changeSandButtons.Add(newButton);
+                
+                /*newButton.onClick.AddListener(() =>
                 {
                     mouseWriter.ChangeStampData(data);
 
@@ -122,10 +144,20 @@ namespace CorgiFallingSands
                     newText.text = data.nameKey;
 
                     ourAudioPlayer.PlaySoundBurst(ourAudioPlayer.AudioSelectMaterial);
-                });
+                });*/
             }
         }
 
+        private void Unselect(ChangeSandButton btn)
+        {
+            foreach (var button in _changeSandButtons)
+            {
+                button.Unselect();
+            }
+            
+            btn.Select();
+        }
+        
         public void OnKnob_DeltaRotation(float deltaAngle)
         {
             StampSizeLabel.text = $"{mouseWriter.StampSize:N2}x";
