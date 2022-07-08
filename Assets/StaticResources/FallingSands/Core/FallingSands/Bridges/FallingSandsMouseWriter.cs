@@ -27,7 +27,7 @@ namespace CorgiFallingSands
         private void Start()
         {
             // set a default
-            ChangeStampData(FallingSandsDataManager.Instance.FindDataObjectFromId((int)FallingDataType.Sand));
+            ChangeStampData(FallingSandsDataManager.Instance.FindDataObjectFromId(2));
         }
 
         private void Update()
