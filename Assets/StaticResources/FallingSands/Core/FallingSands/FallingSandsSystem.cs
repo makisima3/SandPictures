@@ -351,7 +351,21 @@ namespace CorgiFallingSands
         public void RequestStampAtScreenPosition(FallingData data, float temperature, Vector3 screenPosition, int radius)
         {
             var samplePosition = GetScreenPointToTexturePosition(screenPosition);
-
+            Debug.Log(samplePosition);
+            var stampData = new StampData()
+            {
+                id = data,
+                temperature = temperature,
+                position = samplePosition,
+                radius = radius,
+            };
+            _stampRequests.Add(stampData);
+        }
+        
+        public void RequestStampAtCanvasPosition(FallingData data, float temperature, int2 pos, int radius)
+        {
+            var samplePosition = pos;
+            Debug.Log(temperature);
             var stampData = new StampData()
             {
                 id = data,
@@ -725,7 +739,7 @@ namespace CorgiFallingSands
                     var chunkPos = _fallingSandsChunkManager.GetChunkPosFromWorldPos(pos);
 
                     var posInsideChunk = pos - chunkPos;
-
+                    
                     var remainingInSystem = math.abs(screenRes - new int2(x, y));
                     var remainingInChunk = math.abs(new int2(chunkResolution, chunkResolution) - posInsideChunk);
                     var copyRes = math.min(remainingInSystem, remainingInChunk);
@@ -886,7 +900,7 @@ namespace CorgiFallingSands
             foreach (var pos in storedChunkPos)
             {
                 var chunk = _fallingSandsChunkManager.TryGetChunk(pos);
-
+                
                 if (chunk == null)
                 {
                     chunk = _fallingSandsChunkManager.CreateChunkAt(pos);

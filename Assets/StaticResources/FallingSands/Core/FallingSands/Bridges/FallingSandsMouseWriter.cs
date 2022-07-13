@@ -32,6 +32,11 @@ namespace CorgiFallingSands
 
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                FallingSandsSystem.Instance.RequestStampAtCanvasPosition(new FallingData(1), _stampTemperature, new int2(1,123), 1);
+            }
+            
             if (!Input.GetMouseButton(0))
             {
                 myTransform = null;

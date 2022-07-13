@@ -146,9 +146,9 @@ namespace CorgiFallingSands
 
             for (var i = 0; i < tuple_count; ++i)
             {
+                
                 int store_count = ReadBuffer_Int32(buffer, ref compressedIndex);
                 float store_value = ReadBuffer_Float(buffer, ref compressedIndex);
-
                 for (var s = 0; s < store_count; ++s)
                 {
                     WriteBuffer_Float(decompressed, ref decompresedIndex, store_value);

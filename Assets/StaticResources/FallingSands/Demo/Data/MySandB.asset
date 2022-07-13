@@ -18,7 +18,7 @@ MonoBehaviour:
   Id: 27
   Metadata:
     FluidType: 2
-    Color: {r: 0, g: 0.55032945, b: 1, a: 1}
+    Color: {r: 0, g: 0.94219685, b: 1, a: 1}
     temperature: 0
     hasSolidCollision: 1
     spreadsInWater: 0

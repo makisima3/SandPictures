@@ -130,7 +130,6 @@ namespace CorgiFallingSands
                 SaveTemp = chunk.TempTex,
                 StorageArray = new NativeArray<byte>(level.bytes, Allocator.TempJob)
             };
-
             return job.Schedule(dependency);
         }
 

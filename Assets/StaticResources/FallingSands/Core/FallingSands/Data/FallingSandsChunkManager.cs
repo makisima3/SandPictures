@@ -20,8 +20,8 @@ namespace CorgiFallingSands
             var chunkPos = worldPos;
 
             chunkPos.x = (int) Mathf.Floor((float)chunkPos.x / resolutionPerChunk.x) * resolutionPerChunk.x;
-            chunkPos.y = (int) Mathf.Floor((float)chunkPos.y / resolutionPerChunk.y) * resolutionPerChunk.y;
-
+            chunkPos.y = (int) Mathf.Floor((float) chunkPos.y / resolutionPerChunk.y) * resolutionPerChunk.y;
+            
             return chunkPos;
         }
 
