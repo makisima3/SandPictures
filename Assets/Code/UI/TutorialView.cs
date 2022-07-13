@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Code.InitDatas;
 using Code.StoragesObjects;
 using DG.Tweening;
@@ -20,10 +21,11 @@ namespace Code.UI
         [SerializeField] private float blackoutTime;
         [SerializeField] private Transform selectColorPoint;
         [SerializeField] private Transform selectNextColorPoint;
-        [SerializeField] private Transform tapPoint;
+        [SerializeField] private List<Transform> tapPoint;
         [SerializeField] private float scaleForce = 0.2f;
         [SerializeField] private float animTime = 0.5f;
         [SerializeField] private TMP_Text tipText;
+        [SerializeField] private GameObject txtPanel; 
 
         private Tween _tween;
         private bool isFirstShown;
@@ -54,30 +56,36 @@ namespace Code.UI
                 });
         }
 
+        [SerializeField] private Animator _animator;
         public void ShowV2()
         {
             isFirstShown = true;
             tipText.text = "Hold to pour sand";
-            hand.transform.position = tapPoint.position;
+            _tween.Kill();
+            _animator.enabled = true;
+            txtPanel.SetActive(false);
+            isShowV2 = true;
         }
 
         private bool isShowV3;
+        private bool isShowV2;
+        [SerializeField] private Transform pointA;
+        [SerializeField] private Transform pointB;
         public void ShowV3()
         {
-            back.DOFade(0f, 0f);
+            hand.gameObject.SetActive(true);
             gameObject.SetActive(true);
-            hand.gameObject.SetActive(false);
-            tipText.gameObject.SetActive(false);
-            back.DOFade(blackoutForce, blackoutTime)
-                .OnComplete(() => 
-                { 
-                    tipText.gameObject.SetActive(true);
-                    hand.gameObject.SetActive(true);
-                    tipText.text = "Choose next color as on picture";
-                    hand.transform.position = selectNextColorPoint.position;
-                });
-            isShowV3 = true;
+            tipText.text = "Drag to see colors";
+            tipText.gameObject.SetActive(true);
+            txtPanel.SetActive(true);
+            _animator.enabled = false;
+            _tween.Kill();
 
+            hand.transform.position = pointA.position;
+
+            _tween = hand.transform.DOMove(pointB.position, animTime).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
+
+            isShowV3 = true;
         }
 
         public void Hide()
@@ -91,7 +99,11 @@ namespace Code.UI
             {
                 //_selector.Buttons.First().SelectColor();
                 ShowV2();
-            }
+            }/*
+            else if(isFirstShown && isShowV2 && !isShowV3)
+            {
+                ShowV3();
+            }*/
             else if (isFirstShown && isShowV3)
             {
                 //_selector.Buttons.Skip(1).First().SelectColor();

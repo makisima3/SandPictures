@@ -24,8 +24,15 @@ namespace CorgiFallingSands
 
         public int ChunkToSave;
         public int ChunkToLoad;
+        public bool isDeb = false;
         public string SaveDataSubFolder = "chunks";
 
+        private int loadedChung;
+        
+        public void SetLoadLevel(int num)
+        {
+            loadedChung = num;
+        }
 
         public virtual string GetChunkSaveFolder()
         {
@@ -106,7 +113,9 @@ namespace CorgiFallingSands
         /// <returns></returns>
         public virtual JobHandle ScheduleLoadChunk(FallingSandsChunk chunk, JobHandle dependency)
         {
-            var filename = GetChunkLoadFile(ChunkToLoad);
+            var load = isDeb ? ChunkToLoad : loadedChung;
+            
+            var filename = GetChunkLoadFile(load);
 
             var level = Resources.Load<TextAsset>(filename);
 

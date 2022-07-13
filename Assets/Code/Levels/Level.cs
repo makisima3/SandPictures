@@ -51,9 +51,11 @@ namespace Code.Levels
         [SerializeField] private Transform bottomCollider;
         [SerializeField] private float offset;
         [SerializeField] private int chunk;
-        [SerializeField] private FallingSandsStorageManager FallingSandsStorageManager;
+        [SerializeField] private FallingSandsStorageManager fallingSandsStorageManager;
         [SerializeField] private GameObject panel;
-        
+
+        public FallingSandsStorageManager FallingSandsStorageManager => fallingSandsStorageManager;
+
         private ColorsSelector _colorsSelector;
         private TutorialView tutorialView;
         private Coroutine spawnCoroutine;
@@ -142,11 +144,11 @@ namespace Code.Levels
             FallingSandsDataManager.Instance.DataObjects.Add(fallingSandsDataObjPrefabBad);
             FallingSandsDataManager.Instance.DataObjects.AddRange(objs);
             
-            _zones = _cells
+            /*_zones = _cells
                 .Cast<Cell>()
                 .Where(c => !c.IsEmpty)
                 .GroupBy(c => c.Color)
-                .OrderBy(c => MaterialHolder.GetMaterialID(c.Key));
+                .OrderBy(c => MaterialHolder.GetMaterialID(c.Key));*/
 
 
            /* vessel.Initialize(new VesselInitData()
@@ -320,25 +322,36 @@ namespace Code.Levels
             return _cells[position.x, position.y];
         }
 
+        [SerializeField] private float costPos = 1f;
+        [SerializeField] private float costNeg = 1f;
+        [SerializeField, Range(0f, 1f)] private float thresholdCompare;
+        [ContextMenu("CompareResult")]
         public float CompareResult()
         {
             var correctGrainsCount = 0f;
             var texture = RTImage();
-            
+           
             for (int x = 0; x < _resultTargetTexture.width; x++)
             {
                 for (int y = 0; y < _resultTargetTexture.height; y++)
                 {
                     var c = texture.GetPixel(x, y);
-                    
-                    if(c.a <=0 || c == Color.black)
+
+                    if (c.a <= 0 || c == Color.black)
+                    {
                         continue;
+                    }
                     
-                    if (_resultTargetTexture.GetPixel(x, y).ToVector4().DistanceTo(texture.GetPixel(x, y).ToVector4()) <= threshold )
-                        correctGrainsCount++;
+                    if (_resultTargetTexture.GetPixel(x, y).ToVector4().DistanceTo(texture.GetPixel(x, y).ToVector4()) <= thresholdCompare )
+                        correctGrainsCount+= costPos;
+                    else
+                    {
+                        correctGrainsCount-= costNeg;
+                    }
                 }
             }
-
+            
+            Debug.Log(correctGrainsCount / (_resultTargetTexture.width * _resultTargetTexture.height));
             return correctGrainsCount / (_resultTargetTexture.width * _resultTargetTexture.height);
         }
 
@@ -371,7 +384,7 @@ namespace Code.Levels
             _isEnded = true;
             confetti.Play();
             var percetn = CompareResult();
-            _levelCompleteView.Show(percetn);
+            _levelCompleteView.Show(Mathf.Clamp(percetn,0,1));
             camera.DOMove(endPoint.position, cameraMoveTime);
             camera.DORotateQuaternion(endPoint.rotation, cameraMoveTime);
             _isSpawn = false;

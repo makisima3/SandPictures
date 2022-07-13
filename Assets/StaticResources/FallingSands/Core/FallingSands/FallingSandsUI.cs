@@ -109,8 +109,8 @@ namespace CorgiFallingSands
                 newIcon.sprite = data.Icon;
 
                 var newImage = newButton.ColorImage;
-                newImage.color = Color.Lerp(data.Metadata.Color, Color.white, 0.5f); // desaturate 
-
+                //newImage.color = Color.Lerp(data.Metadata.Color, Color.white, 0.5f); // desaturate 
+                newImage.color = data.Metadata.Color;
                 var newText = newButton.GetComponentInChildren<TMPro.TMP_Text>(true);
                 newText.text = data.nameKey;
 

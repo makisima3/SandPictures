@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Code.Factories;
 using Code.InitDatas;
 using Code.Levels;
 using Code.StoragesObjects;
 using Code.UI;
+using CorgiFallingSands;
 using MoreMountains.NiceVibrations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -25,7 +27,8 @@ namespace Code
         [SerializeField] private TutorialView tutorialView;
         [SerializeField] private Button restartButton;
         [SerializeField] private Button levelEndButton;
-        
+        [SerializeField] private float timea = 30f; 
+        [SerializeField] private float timeb = 15f;
         private LevelStorageObject _levelStorageObject;
         private Level level;
         public List<int> StoredChunks;
@@ -35,12 +38,14 @@ namespace Code
             Application.targetFrameRate = 150;
 
             StoredChunks = GatherStoredChunks();
-            
+            levelEndButton.gameObject.SetActive(false);
             restartButton.onClick.AddListener(Restart);
             
             _levelStorageObject =
                 PersistentStorage.PersistentStorage.Load<LevelStorageObject, LevelStorageObject.LevelData>(
                     new LevelStorageObject(new LevelStorageObject.LevelData() {Level = 0}));
+            
+            
             
             if (_levelStorageObject.Data.Level >= levels.Count)
             {
@@ -50,6 +55,7 @@ namespace Code
             }
 
             level = LoadLevel();
+            level.FallingSandsStorageManager.SetLoadLevel(_levelStorageObject.Data.Level);
             colorsSelector.Initialize(new ColorsSelectorInitData()
             {
                 Level = level,
@@ -71,8 +77,21 @@ namespace Code
             {
                 tutorialView.Show();
             }
+            if (_levelStorageObject.Data.Level == 1)
+            {
+                tutorialView.ShowV3();
+            }
             
-            levelEndButton.onClick.AddListener(level.LevelEnd);
+            levelEndButton.onClick.AddListener(() =>
+            {
+                level.LevelEnd();
+                levelEndButton.gameObject.SetActive(false);
+            });
+        }
+
+        private void Start()
+        {
+            StartCoroutine(ActivateBtn());
         }
 
         private Level LoadLevel()
@@ -150,6 +169,19 @@ namespace Code
             return list;
         }
 
-      
+
+        private IEnumerator ActivateBtn()
+        {
+            if (_levelStorageObject.Data.Level == 0)
+            {
+                yield return new WaitForSeconds(timea);
+            }
+            else
+            {
+                yield return new WaitForSeconds(timeb);
+            }
+
+            levelEndButton.gameObject.SetActive(true);
+        }
     }
 }
