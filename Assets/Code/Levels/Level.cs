@@ -324,7 +324,7 @@ namespace Code.Levels
 
         [SerializeField] private float costPos = 1f;
         [SerializeField] private float costNeg = 1f;
-        [SerializeField, Range(0f, 1f)] private float thresholdCompare;
+        [SerializeField] private float thresholdCompare;
         [ContextMenu("CompareResult")]
         public float CompareResult()
         {
