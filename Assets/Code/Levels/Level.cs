@@ -129,10 +129,10 @@ namespace Code.Levels
                 newPrefab.OnTempLow = fallingSandsDataObjPrefab.OnTempLow;
                 newPrefab.ShowInPicker = fallingSandsDataObjPrefab.ShowInPicker;
                 
-                
-
                 newPrefab.Metadata.Color = color.Color;
                 newPrefab.Id = counter;
+                newPrefab.ShowInPicker = color.ShowInButtons;
+                
                 counter++;
                 objs.Add(newPrefab);
                 MaterialHolder.Register(new MaterialHolder.UniqueMaterial(color.Id, material));
@@ -140,6 +140,8 @@ namespace Code.Levels
             }
             
             FallingSandsDataManager.Instance.DataObjects.Clear();
+            fallingSandsDataObjPrefabAir.ShowInPicker = false;
+            fallingSandsDataObjPrefabBad.ShowInPicker = false;
             FallingSandsDataManager.Instance.DataObjects.Add(fallingSandsDataObjPrefabAir);
             FallingSandsDataManager.Instance.DataObjects.Add(fallingSandsDataObjPrefabBad);
             FallingSandsDataManager.Instance.DataObjects.AddRange(objs);
@@ -188,7 +190,7 @@ namespace Code.Levels
             int id = 0;
             foreach (var color in _zones)
             {
-                MaterialHolder._uniqueColors.Add(new MaterialHolder.UniqueColor(id, color.Key));
+                MaterialHolder._uniqueColors.Add(new MaterialHolder.UniqueColor(id, color.Key,false));
                 id++;
             }
         }

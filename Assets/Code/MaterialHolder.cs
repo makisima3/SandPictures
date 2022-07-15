@@ -28,11 +28,13 @@ namespace Code
         {
             [field: SerializeField] public int Id { get; set; }
             [field: SerializeField] public Color Color { get; set; }
+            [field: SerializeField] public bool ShowInButtons { get; set; }
 
-            public UniqueColor(int id, Color color)
+            public UniqueColor(int id, Color color, bool showInButtons)
             {
                 Id = id;
                 Color = color;
+                ShowInButtons = showInButtons;
             }
         }
         
